@@ -1,5 +1,7 @@
-from app.services.auth import AuthService
-from app.services.item import ItemService
-from app.services.user import UserService
+from app.services.ticket import TicketService
+from .auth import AuthService
 
-__all__ = ["AuthService", "ItemService", "UserService"]
+__all__ = [
+    "TicketService",
+    "AuthService",
+]

@@ -1,5 +1,7 @@
 from app.db.models.base import Base
-from app.db.models.item import Item
-from app.db.models.user import User
+from .ticket import Ticket
 
-__all__ = ["Base", "Item", "User"]
+__all__ = [
+    "Base",
+    "Ticket",
+]

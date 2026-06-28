@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -8,13 +9,11 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import event, text
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.pool import NullPool
-from sqlalchemy.sql.sqltypes import Enum as SQLAlchemyEnum
+from sqlalchemy.pool import StaticPool
 
 from app.api.main import app
-from app.core.config_app import generate_url_db
 from app.db.database import get_async_session
 from app.db.models import Base
 
@@ -24,37 +23,18 @@ for logger_name in ["api", "Bot", "uvicorn", "uvicorn.access", "uvicorn.error"]:
         if isinstance(handler, logging.FileHandler):
             logger.removeHandler(handler)
 
-url = generate_url_db() + "_Test"
-test_engine = create_async_engine(url, poolclass=NullPool)
-
-
-def _get_metadata_enum_names() -> list[str]:
-    enum_names: set[str] = set()
-    for table in Base.metadata.tables.values():
-        for column in table.columns:
-            if isinstance(column.type, SQLAlchemyEnum) and column.type.name:
-                enum_names.add(column.type.name)
-    return sorted(enum_names)
-
-
-METADATA_ENUM_NAMES = _get_metadata_enum_names()
-
-
-async def _drop_postgres_enum_types(conn) -> None:
-    for enum_name in METADATA_ENUM_NAMES:
-        await conn.execute(text(f'DROP TYPE IF EXISTS "{enum_name}" CASCADE'))
+url = os.getenv("TEST_DATABASE_URL", "sqlite+aiosqlite:///:memory:")
+test_engine = create_async_engine(url, poolclass=StaticPool)
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def setup_database():
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-        await _drop_postgres_enum_types(conn)
         await conn.run_sync(Base.metadata.create_all)
     yield
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-        await _drop_postgres_enum_types(conn)
     await test_engine.dispose()
 
 

@@ -4,18 +4,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
-from app.api.routers import authorization_router, items_router, users_router
+from app.api.routers import ticket_router, authorization_router
 from app.core.logging_config import setup_logging
 
 setup_logging()
 
 APP_VERSION = "0.1.0"
-SERVICE_NAME = "StarterKit API"
+SERVICE_NAME = "Internal Ticket System API"
 
 app = FastAPI(
     title=SERVICE_NAME,
     version=APP_VERSION,
-    description="Reusable API template with GTO-style architecture.",
+    description="API for internal ticket management.",
 )
 logger = logging.getLogger(__name__)
 
@@ -83,7 +83,7 @@ async def main_menu():
                     Version: <strong>{APP_VERSION}</strong><br>
                     Status: <span style="color: green;">online</span>
                 </div>
-                <p>Reusable API template with auth, service layer, repository layer and React frontend.</p>
+                <p>Internal ticket management API.</p>
                 <h3>Navigation</h3>
                 <a href="/docs">Swagger UI</a>
                 <a href="/redoc">ReDoc</a>
@@ -93,6 +93,5 @@ async def main_menu():
         </html>
         """
 
+app.include_router(router=ticket_router)
 app.include_router(router=authorization_router)
-app.include_router(router=users_router)
-app.include_router(router=items_router)

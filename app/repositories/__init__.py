@@ -1,4 +1,7 @@
-from app.repositories.item import ItemRepository
-from app.repositories.user import UserRepository
+from app.repositories.ticket import TicketRepository
+from app.repositories.ticket_criteria import TicketListCriteria
 
-__all__ = ["ItemRepository", "UserRepository"]
+__all__ = [
+    "TicketListCriteria",
+    "TicketRepository",
+]

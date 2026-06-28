@@ -1,21 +1,4 @@
 services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_USER: ${DB_USER:-starterkit}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-starterkit}
-      POSTGRES_DB: ${DB_NAME:-starterkit}
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
-
   redis:
     image: redis:7-alpine
     healthcheck:
@@ -30,11 +13,7 @@ services:
     expose:
       - "8000"
     environment:
-      DB_NAME: ${DB_NAME:-starterkit}
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: ${DB_USER:-starterkit}
-      DB_PASSWORD: ${DB_PASSWORD:-starterkit}
+      DATABASE_URL: ${DATABASE_URL:-sqlite+aiosqlite:////app/data/app.db}
       REDIS_HOST: redis
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_DATABASE: ${REDIS_DATABASE:-0}
@@ -47,9 +26,9 @@ services:
     command: >
       sh -c "alembic upgrade head &&
              uvicorn app.api.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - sqlite_data:/app/data
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
@@ -72,4 +51,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  sqlite_data:

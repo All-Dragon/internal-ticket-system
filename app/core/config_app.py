@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-from urllib.parse import quote
 
 from environs import Env
 
@@ -19,11 +18,7 @@ class APISettings:
 
 @dataclass
 class DatabaseSettings:
-    name: str
-    host: str
-    port: int
-    user: str
-    password: str
+    url: str
 
 
 @dataclass
@@ -48,11 +43,7 @@ def load_config(path: str | None = None) -> Config:
     env.read_env(path)
 
     db = DatabaseSettings(
-        name=env("DB_NAME", "starterkit"),
-        host=env("DB_HOST", "localhost"),
-        port=env.int("DB_PORT", 5432),
-        user=env("DB_USER", "starterkit"),
-        password=env("DB_PASSWORD", "starterkit"),
+        url=env("DATABASE_URL", "sqlite+aiosqlite:///./app.db"),
     )
 
     redis = RedisSettings(
@@ -78,8 +69,4 @@ def load_config(path: str | None = None) -> Config:
 
 def generate_url_db():
     config: Config = load_config()
-    url = (
-        f"postgresql+asyncpg://{quote(config.db.user, safe='')}:"
-        f"{quote(config.db.password, safe='')}@{config.db.host}:{config.db.port}/{config.db.name}"
-    )
-    return url
+    return config.db.url
