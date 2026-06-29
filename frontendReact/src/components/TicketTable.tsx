@@ -14,6 +14,7 @@ type TicketTableProps = {
   deletingTicketId: number | null;
   onStatusChange: (id: number, status: TicketStatus) => void;
   onDelete: (id: number) => void;
+  onEdit: (ticket: Ticket) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 };
@@ -95,6 +96,7 @@ function TicketTable({
   deletingTicketId,
   onStatusChange,
   onDelete,
+  onEdit,
   onPageChange,
   onPageSizeChange,
 }: TicketTableProps) {
@@ -129,6 +131,7 @@ function TicketTable({
               const isUpdating = updatingTicketId === ticket.id;
               const isDeleting = deletingTicketId === ticket.id;
               const canDelete = isAdmin && !isDone;
+              const canEdit = !isDone;
 
               return (
                 <tr key={ticket.id}>
@@ -137,9 +140,14 @@ function TicketTable({
                   <td className={styles.titleCell}>{ticket.title}</td>
 
                   <td className={styles.descriptionCell}>
-                    {ticket.description || (
-                      <span className={styles.mutedText}>Без описания</span>
-                    )}
+                    <span
+                      className={styles.descriptionText}
+                      title={ticket.description || "Без описания"}
+                    >
+                      {ticket.description || (
+                        <span className={styles.mutedText}>Без описания</span>
+                      )}
+                    </span>
                   </td>
 
                   <td>
@@ -173,9 +181,23 @@ function TicketTable({
 
                   <td>
                     <div className={styles.actions}>
+                      <button
+                        className={`${styles.actionButton} ${styles.editButton}`}
+                        type="button"
+                        disabled={!canEdit}
+                        onClick={() => onEdit(ticket)}
+                        title={
+                          isDone
+                            ? "Заявку в статусе Done нельзя редактировать"
+                            : "Редактировать заявку"
+                        }
+                      >
+                        Ред.
+                      </button>
+
                       {isAdmin ? (
                         <button
-                          className={`${styles.iconButton} ${styles.dangerButton}`}
+                          className={`${styles.actionButton} ${styles.dangerButton}`}
                           type="button"
                           disabled={!canDelete || isDeleting}
                           onClick={() => onDelete(ticket.id)}
@@ -187,9 +209,7 @@ function TicketTable({
                         >
                           {isDeleting ? "..." : "Удалить"}
                         </button>
-                      ) : (
-                        <span className={styles.mutedText}>-</span>
-                      )}
+                      ) : null}
                     </div>
                   </td>
                 </tr>

@@ -12,6 +12,7 @@ from app.schemas import (
     TicketListParams,
     TicketListResponse,
     TicketStatusUpdate,
+    TicketUpdate,
 )
 
 logger = logging.getLogger(__name__)
@@ -99,7 +100,38 @@ class TicketService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Ошибка сервера при создании заявки",
             )
+    
+    @staticmethod
+    async def update(
+        session: AsyncSession,
+        id: int,
+        data: TicketUpdate,
+    ):
+        logger.info("Редактирование заявки id=%s", id)
+
+        ticket = await TicketService.get_by_id(session=session, id=id)
+
+        if ticket.status == TicketStatus.done:
+            logger.warning("Попытка отредактировать заявку в статусе done: id=%s", id)
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Заявку в статусе done нельзя редактировать",
+            )
+
+        try:
+            return await TicketRepository.update(
+                session=session,
+                ticket=ticket,
+                data=data,
+            )
+        except Exception:
+            logger.exception("Ошибка при редактировании заявки id=%s", id)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка сервера при редактировании заявки",
+            )
         
+
     @staticmethod
     async def update_status(
         session: AsyncSession,

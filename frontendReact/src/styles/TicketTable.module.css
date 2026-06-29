@@ -18,6 +18,7 @@
   width: 100%;
   min-width: 1040px;
   border-collapse: collapse;
+  table-layout: fixed;
   color: #17233c;
   font-size: 14px;
 }
@@ -48,13 +49,21 @@
 }
 
 .titleCell {
-  min-width: 210px;
+  width: 220px;
   font-weight: 700;
 }
 
 .descriptionCell {
-  max-width: 280px;
+  width: 320px;
   color: #526174;
+}
+
+.descriptionText {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mutedText {
@@ -105,26 +114,70 @@
 
 .actions {
   display: flex;
+  align-items: center;
   gap: 8px;
+  min-width: 124px;
 }
 
-.iconButton {
-  width: 34px;
+.actionButton {
+  min-width: 54px;
   height: 34px;
   border: 1px solid #d6deea;
   border-radius: 7px;
-  color: #526174;
+  padding: 0 10px;
+  color: #34425a;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
   background: #ffffff;
   cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+
+.actionButton:hover {
+  border-color: #b8c4d6;
+  color: #17233c;
+  background: #f7f9fc;
+}
+
+.actionButton:active {
+  transform: translateY(1px);
+}
+
+.editButton {
+  color: #2454d6;
+}
+
+.editButton:hover {
+  border-color: #bfd0ff;
+  color: #1d46ad;
+  background: #eff4ff;
 }
 
 .dangerButton {
   color: #d92d20;
 }
 
-.iconButton:disabled {
+.dangerButton:hover {
+  border-color: #f4b8b2;
+  color: #b42318;
+  background: #fff1f0;
+}
+
+.actionButton:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.actionButton:disabled:hover {
+  border-color: #d6deea;
+  color: #526174;
+  background: #ffffff;
 }
 
 .footer {

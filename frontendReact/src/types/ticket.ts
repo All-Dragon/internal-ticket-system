@@ -19,6 +19,12 @@ export type TicketCreate = {
   priority: TicketPriority;
 };
 
+export type TicketUpdate = {
+  title: string;
+  description?: string | null;
+  priority: TicketPriority;
+};
+
 export type TicketStatusUpdate = {
   status: TicketStatus;
 };

@@ -7,6 +7,7 @@ import type {
   TicketListParams,
   TicketListResponse,
   TicketStatus,
+  TicketUpdate,
 } from "../types/ticket";
 
 function buildTicketQuery(params: TicketListParams = {}): string {
@@ -34,6 +35,16 @@ export async function getTickets(
 export async function createTicket(data: TicketCreate): Promise<Ticket> {
   return authFetch<Ticket>(apiUrl("/tickets"), {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateTicket(
+  id: number,
+  data: TicketUpdate,
+): Promise<Ticket> {
+  return authFetch<Ticket>(apiUrl(`/tickets/${id}`), {
+    method: "PATCH",
     body: JSON.stringify(data),
   });
 }

@@ -12,7 +12,12 @@ class TicketBase(BaseModel):
     @field_validator("title")
     @classmethod
     def normalize_title(cls, value: str) -> str:
-        return value.strip()
+        value = value.strip()
+
+        if len(value) < 3:
+            raise ValueError("Заголовок должен содержать минимум 3 символа")
+
+        return value
 
     @field_validator("description")
     @classmethod
@@ -25,6 +30,10 @@ class TicketBase(BaseModel):
 
 
 class TicketCreate(TicketBase):
+    priority: TicketPriority
+
+
+class TicketUpdate(TicketBase):
     priority: TicketPriority
 
 

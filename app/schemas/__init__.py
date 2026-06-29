@@ -4,6 +4,7 @@ from .ticket import (
     TicketListResponse,
     TicketRead,
     TicketStatusUpdate,
+    TicketUpdate,
 )
 
 from .auth import AdminLogin, Token
@@ -14,6 +15,7 @@ __all__ = [
     "TicketRead",
     "TicketListParams",
     "TicketListResponse",
+    'TicketUpdate',
     "AdminLogin",
     "Token",
 ]

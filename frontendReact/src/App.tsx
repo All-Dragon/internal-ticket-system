@@ -1,11 +1,16 @@
+import { useState } from "react";
+
 import AdminLoginForm from "./components/AdminLoginForm";
 import TicketCreateForm from "./components/TicketCreateForm";
+import TicketEditModal from "./components/TicketEditModal";
 import TicketFilters from "./components/TicketFilters";
 import TicketStatusPanel from "./components/TicketStatusPanel";
 import TicketTable from "./components/TicketTable";
 
 import useAdminAuth from "./hooks/useAdminAuth";
 import useTicketsPage from "./hooks/useTicketsPage";
+
+import type { Ticket } from "./types/ticket";
 
 import "./App.css";
 
@@ -18,6 +23,25 @@ function App() {
       ...ticketsPage.filters,
       page: 1,
     });
+  }
+
+  const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
+
+  function handleEditTicket(ticket: Ticket): void {
+    if (ticket.status === "done") {
+      return;
+    }
+
+    setEditingTicket(ticket);
+  }
+
+  function handleEditClose(): void {
+    setEditingTicket(null);
+  }
+
+  async function handleTicketUpdated(): Promise<void> {
+    await ticketsPage.loadTickets(ticketsPage.filters);
+    setEditingTicket(null);
   }
 
   const isTicketsEmpty = !ticketsPage.loading && ticketsPage.tickets.length === 0;
@@ -71,6 +95,7 @@ function App() {
           deletingTicketId={ticketsPage.deletingTicketId}
           onStatusChange={ticketsPage.handleStatusChange}
           onDelete={ticketsPage.handleDeleteTicket}
+          onEdit={handleEditTicket}
           onPageChange={ticketsPage.handlePageChange}
           onPageSizeChange={ticketsPage.handlePageSizeChange}
         />
@@ -82,6 +107,15 @@ function App() {
         isEmpty={isTicketsEmpty}
         onErrorClose={ticketsPage.handleErrorClose}
       />
+
+      {editingTicket && (
+        <TicketEditModal
+          key={editingTicket.id}
+          ticket={editingTicket}
+          onClose={handleEditClose}
+          onUpdated={handleTicketUpdated}
+        />
+      )}
     </main>
   );
 }

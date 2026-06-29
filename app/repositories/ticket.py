@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.enum import SortOrder, TicketPriority, TicketSortBy, TicketStatus
 from app.db.models import Ticket
 from app.repositories.ticket_criteria import TicketListCriteria
-from app.schemas import TicketCreate
+from app.schemas import TicketCreate, TicketUpdate
 
 
 class TicketRepository:
@@ -54,6 +54,20 @@ class TicketRepository:
         )
 
         return list(result.all()), total or 0
+
+    @staticmethod
+    async def update(
+        session: AsyncSession,
+        ticket: Ticket,
+        data: TicketUpdate
+    ) -> Ticket:
+        ticket.title = data.title
+        ticket.description = data.description
+        ticket.priority = data.priority
+
+        await session.commit()
+        await session.refresh(ticket)
+        return ticket
 
     @staticmethod
     async def update_status(

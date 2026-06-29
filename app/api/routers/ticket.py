@@ -8,6 +8,7 @@ from app.schemas import (
     TicketListResponse,
     TicketRead,
     TicketStatusUpdate,
+    TicketUpdate,
 )
 from app.services import TicketService
 from app.core.JWT.admin_auth import require_admin
@@ -42,6 +43,15 @@ async def create(
     session: AsyncSession = Depends(get_async_session)
 ):
     ticket = await TicketService.create(session=session, data=data)
+    return TicketRead.model_validate(ticket)
+
+@ticket_router.patch("/{id}", response_model=TicketRead)
+async def update(
+    id: int,
+    data: TicketUpdate,
+    session: AsyncSession = Depends(get_async_session)
+):
+    ticket = await TicketService.update(session=session, id=id, data=data)
     return TicketRead.model_validate(ticket)
 
 @ticket_router.patch("/{id}/status", response_model=TicketRead)

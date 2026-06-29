@@ -164,6 +164,69 @@ async def test_update_ticket_status_negative_done_ticket(client, caplog):
     assert any(record.levelno == logging.WARNING for record in caplog.records)
 
 
+async def test_update_ticket(client, caplog):
+    caplog.set_level(logging.INFO, logger="app.services.ticket")
+    create_response = await create_ticket(client, title="Old title", priority="low")
+    ticket_id = create_response.json()["id"]
+
+    response = await client.patch(
+        f"/tickets/{ticket_id}",
+        json={
+            "title": "Updated title",
+            "description": "Updated description.",
+            "priority": "high",
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == ticket_id
+    assert data["title"] == "Updated title"
+    assert data["description"] == "Updated description."
+    assert data["priority"] == "high"
+    assert data["status"] == "new"
+    assert any(record.name == "app.services.ticket" for record in caplog.records)
+
+
+async def test_update_ticket_negative_done_ticket(client, caplog):
+    caplog.set_level(logging.WARNING, logger="app.services.ticket")
+    create_response = await create_ticket(client, title="Readonly request", priority="normal")
+    ticket_id = create_response.json()["id"]
+    done_response = await client.patch(
+        f"/tickets/{ticket_id}/status",
+        json={"status": "done"},
+    )
+    assert done_response.status_code == 200
+
+    response = await client.patch(
+        f"/tickets/{ticket_id}",
+        json={
+            "title": "Should not update",
+            "description": "Ticket is done.",
+            "priority": "high",
+        },
+    )
+
+    assert response.status_code == 409
+    assert any(record.levelno == logging.WARNING for record in caplog.records)
+
+
+async def test_update_ticket_negative_blank_title(client):
+    create_response = await create_ticket(client, title="Whitespace title", priority="normal")
+    ticket_id = create_response.json()["id"]
+
+    response = await client.patch(
+        f"/tickets/{ticket_id}",
+        json={
+            "title": "   ",
+            "description": "Title has only spaces.",
+            "priority": "normal",
+        },
+    )
+
+    assert response.status_code == 422
+
+
 async def test_delete_ticket(client, caplog):
     caplog.set_level(logging.INFO, logger="app.services.ticket")
     admin_headers = await login_admin(client)
