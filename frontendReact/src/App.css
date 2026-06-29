@@ -1,1 +1,77 @@
-/* App-level styles live in styles/global.css. This file mirrors the GTO layout. */
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #172026;
+  background: #f4f7f8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.appShell {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  padding: 32px;
+}
+
+.appPlaceholder {
+  width: min(100%, 720px);
+  border: 1px solid #dde5e8;
+  border-radius: 8px;
+  padding: 32px;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(28, 47, 58, 0.1);
+}
+
+.appEyebrow {
+  margin: 0 0 10px;
+  color: #287c7b;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.appPlaceholder h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.appPlaceholder p {
+  margin: 0;
+  color: #5e6d75;
+  line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+  .appShell {
+    padding: 18px;
+  }
+
+  .appPlaceholder {
+    padding: 24px;
+  }
+
+  .appPlaceholder h1 {
+    font-size: 28px;
+  }
+}

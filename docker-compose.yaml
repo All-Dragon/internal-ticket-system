@@ -23,6 +23,8 @@ services:
       SECRET_KEY: ${SECRET_KEY:-change-me-in-real-projects}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
     command: >
       sh -c "alembic upgrade head &&
              uvicorn app.api.main:app --host 0.0.0.0 --port 8000"

@@ -22,6 +22,12 @@ class DatabaseSettings:
 
 
 @dataclass
+class AdminCredentials:
+    username: str
+    password: str
+
+
+@dataclass
 class RedisSettings:
     host: str
     port: int
@@ -36,6 +42,7 @@ class Config:
     redis: RedisSettings
     api: APISettings
     jwt: JWTSettings
+    adminCred: AdminCredentials
 
 
 def load_config(path: str | None = None) -> Config:
@@ -64,7 +71,12 @@ def load_config(path: str | None = None) -> Config:
         ACCESS_TOKEN_EXPIRE_MINUTES=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")),
     )
 
-    return Config(db=db, redis=redis, api=api, jwt=jwt)
+    admin_cred = AdminCredentials(
+        username=env("ADMIN_USERNAME"),
+        password=env("ADMIN_PASSWORD"),
+    )
+
+    return Config(db=db, redis=redis, api=api, jwt=jwt, adminCred=admin_cred)
 
 
 def generate_url_db():

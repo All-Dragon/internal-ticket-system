@@ -15,7 +15,7 @@ class AuthService:
     async def login_admin(data: AdminLogin) -> Token:
         logger.info("Попытка входа администратора username=%s", data.username)
 
-        if data.username != "admin" or data.password != "admin":
+        if data.username != config.adminCred.username or data.password != config.adminCred.password:
             logger.warning("Неуспешная попытка входа администратора username=%s", data.username)
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

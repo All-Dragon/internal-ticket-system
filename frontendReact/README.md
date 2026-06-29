@@ -1,14 +1,9 @@
 # Frontend Notes
 
-GTO-style frontend layout:
+React + TypeScript frontend for the internal ticket system.
 
-- `api/config.js`: base URL helper.
-- `api/authFetch.js`: authenticated fetch wrapper.
-- `api/*.js`: domain API functions.
-- `context/AuthContext.jsx`: auth state and user profile.
-- `hooks/*`: form and data-loading logic.
-- `components/*`: reusable UI pieces.
-- `pages/*`: route-level screens.
-- `layouts/MainLayout.jsx`: protected app shell.
+Current state:
 
-To add a new entity, copy `items.js`, `useItems.js`, and `ItemsPage.jsx`, then add a route in `App.jsx`.
+- `src/main.tsx`: React entry point.
+- `src/App.tsx`: temporary shell for the future ticket screen.
+- `vite.config.ts`: dev proxy for backend `/auth` and `/tickets` routes.
