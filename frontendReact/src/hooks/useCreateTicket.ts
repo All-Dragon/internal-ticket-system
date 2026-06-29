@@ -112,7 +112,7 @@ function useCreateTicket({ onCreated }: UseCreateTicketParams = {}) {
       const message =
         submitError instanceof Error
           ? submitError.message
-          : "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ Р·Р°СЏРІРєСѓ";
+          : "Не удалось создать заявку";
 
       setError(message);
     } finally {

@@ -78,7 +78,7 @@ function TicketFilters({ filters, onChange, onReset }: TicketFiltersProps) {
       </label>
 
       <label className={styles.fieldGroup} htmlFor="ticket-sort-order">
-        <span className={styles.label}>Порядок</span>
+        <span className={styles.label}>Направление сортировки</span>
         <select
           className={styles.select}
           id="ticket-sort-order"

@@ -34,11 +34,13 @@ function TicketStatusPanel({
       {!loading && isEmpty && (
         <section className={`${styles.panel} ${styles.emptyPanel}`}>
           <span className={styles.icon} aria-hidden="true">
-            —
+            -
           </span>
           <div className={styles.content}>
             <h2 className={styles.title}>Заявки не найдены</h2>
-            <p className={styles.text}>Попробуйте изменить параметры поиска.</p>
+            <p className={styles.text}>
+              Попробуйте изменить параметры поиска.
+            </p>
           </div>
         </section>
       )}

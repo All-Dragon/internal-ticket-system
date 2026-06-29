@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import styles from "../styles/AdminLoginForm.module.css";
 
 import type { ChangeEvent, FormEvent } from "react";
@@ -24,11 +26,15 @@ function AdminLoginForm({
   onLogout,
   onErrorClose,
 }: AdminLoginFormProps) {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
   if (isAdmin) {
     return (
       <div className={styles.root}>
         <div className={styles.state}>
-          <span className={styles.stateText}>Вы вошли как администратор</span>
+          <span className={styles.stateText}>
+            Вы вошли как администратор
+          </span>
           <button
             className={styles.logoutButton}
             type="button"
@@ -79,13 +85,21 @@ function AdminLoginForm({
           </span>
           <input
             className={styles.field}
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
             onChange={onChange}
             placeholder="Пароль"
             autoComplete="current-password"
           />
+          <button
+            className={styles.passwordToggle}
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+          >
+            {showPassword ? "Скрыть" : "Показать"}
+          </button>
         </label>
 
         <button className={styles.submitButton} type="submit" disabled={loading}>

@@ -31,13 +31,33 @@
   height: 38px;
   border: 1px solid #d6deea;
   border-radius: 7px;
-  padding: 0 12px 0 36px;
+  padding: 0 78px 0 36px;
   color: #17233c;
   background: #ffffff;
   outline: none;
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  border: 0;
+  border-radius: 6px;
+  padding: 4px 6px;
+  color: #526174;
+  font-size: 12px;
+  font-weight: 700;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.passwordToggle:hover {
+  color: #315fd8;
+  background: #eef3ff;
 }
 
 .field::placeholder {
