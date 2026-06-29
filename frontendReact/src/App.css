@@ -63,70 +63,44 @@ button {
   letter-spacing: 0;
 }
 
+.systemInfoButton {
+  min-height: 38px;
+  border: 1px solid #d6deea;
+  border-radius: 7px;
+  padding: 0 14px;
+  color: #34425a;
+  font-weight: 700;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+
+.systemInfoButton:hover {
+  border-color: #b8c4d6;
+  color: #17233c;
+  background: #f7f9fc;
+}
+
+.systemInfoButton:active {
+  transform: translateY(1px);
+}
+
 .topGrid {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(320px, 560px);
   gap: 24px;
   align-items: stretch;
 }
 
-.systemPanel,
 .tablePanel {
   border: 1px solid #dfe6f0;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 14px 36px rgba(39, 54, 78, 0.07);
-}
-
-.systemPanel {
-  padding: 24px 32px;
-}
-
-.systemPanel h2 {
-  margin: 0 0 22px;
-  color: #17233c;
-  font-size: 20px;
-  line-height: 1.2;
-  letter-spacing: 0;
-}
-
-.rulesList {
-  display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.rulesList li {
-  position: relative;
-  min-height: 54px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e8edf4;
-  padding: 14px 0 14px 44px;
-  color: #27364e;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.rulesList li:last-child {
-  border-bottom: 0;
-}
-
-.rulesList li::before {
-  content: "i";
-  position: absolute;
-  left: 0;
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #cfd8e6;
-  border-radius: 999px;
-  color: #526174;
-  font-size: 13px;
-  font-weight: 800;
 }
 
 .tablePanel {
@@ -153,16 +127,11 @@ button {
   }
 
   .appHeader,
-  .systemPanel,
   .tablePanel {
     padding: 16px;
   }
 
   .appTitle {
     font-size: 20px;
-  }
-
-  .rulesList li {
-    padding-left: 38px;
   }
 }

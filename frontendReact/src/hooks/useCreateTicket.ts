@@ -9,7 +9,7 @@ import {
 import { DEFAULT_TICKET_FORM_DATA } from "../types/createTicket";
 
 import type { ChangeEvent, FormEvent } from "react";
-import type { TicketCreate } from "../types/ticket";
+import type { Ticket, TicketCreate } from "../types/ticket";
 import type {
   TicketFormData,
   TicketFormErrors,
@@ -28,6 +28,7 @@ function useCreateTicket({ onCreated }: UseCreateTicketParams = {}) {
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<TicketFormErrors>({});
   const [success, setSuccess] = useState<boolean>(false);
+  const [createdTicket, setCreatedTicket] = useState<Ticket | null>(null);
 
   function validateField(
     name: TicketFormFieldName,
@@ -101,8 +102,9 @@ function useCreateTicket({ onCreated }: UseCreateTicketParams = {}) {
       setError(null);
       setSuccess(false);
 
-      await createTicket(payload);
+      const ticket = await createTicket(payload);
 
+      setCreatedTicket(ticket);
       setSuccess(true);
       setFormData(DEFAULT_TICKET_FORM_DATA);
       setErrors({});
@@ -122,6 +124,7 @@ function useCreateTicket({ onCreated }: UseCreateTicketParams = {}) {
 
   function handleSuccessClose(): void {
     setSuccess(false);
+    setCreatedTicket(null);
   }
 
   return {
@@ -130,6 +133,7 @@ function useCreateTicket({ onCreated }: UseCreateTicketParams = {}) {
     error,
     errors,
     success,
+    createdTicket,
     handleChange,
     handleSubmit,
     handleSuccessClose,

@@ -2,8 +2,10 @@ import { useState } from "react";
 
 import AdminLoginForm from "./components/AdminLoginForm";
 import TicketCreateForm from "./components/TicketCreateForm";
+import TicketDetailsModal from "./components/TicketDetailsModal";
 import TicketEditModal from "./components/TicketEditModal";
 import TicketFilters from "./components/TicketFilters";
+import SystemInfoModal from "./components/SystemInfoModal";
 import TicketStatusPanel from "./components/TicketStatusPanel";
 import TicketTable from "./components/TicketTable";
 
@@ -26,6 +28,16 @@ function App() {
   }
 
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
+  const [viewingTicket, setViewingTicket] = useState<Ticket | null>(null);
+  const [isSystemInfoOpen, setIsSystemInfoOpen] = useState<boolean>(false);
+
+  function handleViewTicket(ticket: Ticket): void {
+    setViewingTicket(ticket);
+  }
+
+  function handleViewClose(): void {
+    setViewingTicket(null);
+  }
 
   function handleEditTicket(ticket: Ticket): void {
     if (ticket.status === "done") {
@@ -44,12 +56,38 @@ function App() {
     setEditingTicket(null);
   }
 
+  function handleDetailsEdit(ticket: Ticket): void {
+    setViewingTicket(null);
+    handleEditTicket(ticket);
+  }
+
+  async function handleDetailsDelete(id: number): Promise<void> {
+    await ticketsPage.handleDeleteTicket(id);
+    setViewingTicket(null);
+  }
+
+  function handleSystemInfoOpen(): void {
+    setIsSystemInfoOpen(true);
+  }
+
+  function handleSystemInfoClose(): void {
+    setIsSystemInfoOpen(false);
+  }
+
   const isTicketsEmpty = !ticketsPage.loading && ticketsPage.tickets.length === 0;
 
   return (
     <main className="appPage">
       <header className="appHeader">
         <h1 className="appTitle">Внутренние заявки</h1>
+
+        <button
+          className="systemInfoButton"
+          type="button"
+          onClick={handleSystemInfoOpen}
+        >
+          О системе
+        </button>
 
         <AdminLoginForm
           formData={adminAuth.formData}
@@ -65,17 +103,6 @@ function App() {
 
       <section className="topGrid">
         <TicketCreateForm onCreated={handleTicketCreated} />
-
-        <section className="systemPanel" aria-labelledby="system-title">
-          <h2 id="system-title">О системе</h2>
-
-          <ul className="rulesList">
-            <li>Заявки в статусе Done нельзя редактировать или удалять.</li>
-            <li>Нельзя перевести заявку из Done обратно в другой статус.</li>
-            <li>Удаление заявки доступно только администратору.</li>
-            <li>Все даты и время указаны в UTC.</li>
-          </ul>
-        </section>
       </section>
 
       <section className="tablePanel">
@@ -96,6 +123,7 @@ function App() {
           onStatusChange={ticketsPage.handleStatusChange}
           onDelete={ticketsPage.handleDeleteTicket}
           onEdit={handleEditTicket}
+          onView={handleViewTicket}
           onPageChange={ticketsPage.handlePageChange}
           onPageSizeChange={ticketsPage.handlePageSizeChange}
         />
@@ -115,6 +143,21 @@ function App() {
           onClose={handleEditClose}
           onUpdated={handleTicketUpdated}
         />
+      )}
+
+      {viewingTicket && (
+        <TicketDetailsModal
+          key={viewingTicket.id}
+          ticket={viewingTicket}
+          isAdmin={adminAuth.isAdmin}
+          onClose={handleViewClose}
+          onEdit={handleDetailsEdit}
+          onDelete={handleDetailsDelete}
+        />
+      )}
+
+      {isSystemInfoOpen && (
+        <SystemInfoModal onClose={handleSystemInfoClose} />
       )}
     </main>
   );

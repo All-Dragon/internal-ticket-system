@@ -15,6 +15,7 @@ type TicketTableProps = {
   onStatusChange: (id: number, status: TicketStatus) => void;
   onDelete: (id: number) => void;
   onEdit: (ticket: Ticket) => void;
+  onView: (ticket: Ticket) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 };
@@ -97,6 +98,7 @@ function TicketTable({
   onStatusChange,
   onDelete,
   onEdit,
+  onView,
   onPageChange,
   onPageSizeChange,
 }: TicketTableProps) {
@@ -112,6 +114,17 @@ function TicketTable({
     <section className={styles.panel} aria-label="Список заявок">
       <div className={styles.tableWrap}>
         <table className={styles.table}>
+          <colgroup>
+            <col className={styles.idColumn} />
+            <col className={styles.titleColumn} />
+            <col className={styles.descriptionColumn} />
+            <col className={styles.statusColumn} />
+            <col className={styles.priorityColumn} />
+            <col className={styles.dateColumn} />
+            <col className={styles.dateColumn} />
+            <col className={styles.actionsColumn} />
+          </colgroup>
+
           <thead>
             <tr>
               <th>ID</th>
@@ -134,7 +147,11 @@ function TicketTable({
               const canEdit = !isDone;
 
               return (
-                <tr key={ticket.id}>
+                <tr
+                  key={ticket.id}
+                  className={styles.row}
+                  onClick={() => onView(ticket)}
+                >
                   <td className={styles.idCell}>#{ticket.id}</td>
 
                   <td className={styles.titleCell}>{ticket.title}</td>
@@ -155,6 +172,7 @@ function TicketTable({
                       className={getStatusClassName(ticket.status)}
                       value={ticket.status}
                       disabled={isDone || isUpdating}
+                      onClick={(event) => event.stopPropagation()}
                       onChange={(event) =>
                         onStatusChange(
                           ticket.id,
@@ -182,10 +200,25 @@ function TicketTable({
                   <td>
                     <div className={styles.actions}>
                       <button
+                        className={`${styles.actionButton} ${styles.viewButton}`}
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onView(ticket);
+                        }}
+                        title="Посмотреть заявку"
+                      >
+                        Смотр.
+                      </button>
+
+                      <button
                         className={`${styles.actionButton} ${styles.editButton}`}
                         type="button"
                         disabled={!canEdit}
-                        onClick={() => onEdit(ticket)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onEdit(ticket);
+                        }}
                         title={
                           isDone
                             ? "Заявку в статусе Done нельзя редактировать"
@@ -200,7 +233,10 @@ function TicketTable({
                           className={`${styles.actionButton} ${styles.dangerButton}`}
                           type="button"
                           disabled={!canDelete || isDeleting}
-                          onClick={() => onDelete(ticket.id)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onDelete(ticket.id);
+                          }}
                           title={
                             isDone
                               ? "Заявку в статусе Done нельзя удалить"

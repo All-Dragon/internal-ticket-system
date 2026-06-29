@@ -19,6 +19,7 @@ from sqlalchemy.pool import StaticPool
 from app.api.main import app
 from app.db.database import get_async_session
 from app.db.models import Base
+from app.db.sqlite_functions import register_sqlite_functions
 
 for logger_name in ["api", "Bot", "uvicorn", "uvicorn.access", "uvicorn.error"]:
     logger = logging.getLogger(logger_name)
@@ -28,6 +29,7 @@ for logger_name in ["api", "Bot", "uvicorn", "uvicorn.access", "uvicorn.error"]:
 
 url = os.getenv("TEST_DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 test_engine = create_async_engine(url, poolclass=StaticPool)
+event.listen(test_engine.sync_engine, "connect", register_sqlite_functions)
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)

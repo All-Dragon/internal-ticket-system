@@ -96,11 +96,11 @@ class TicketRepository:
             filters.append(Ticket.priority == criteria.priority)
 
         if criteria.search is not None:
-            search_pattern = f"%{criteria.search}%"
+            search_pattern = f"%{criteria.search.casefold()}%"
             filters.append(
                 or_(
-                    Ticket.title.ilike(search_pattern),
-                    Ticket.description.ilike(search_pattern),
+                    func.casefold(Ticket.title).like(search_pattern),
+                    func.casefold(Ticket.description).like(search_pattern),
                 )
             )
 

@@ -1,0 +1,125 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(23, 35, 60, 0.42);
+}
+
+.modal {
+  width: min(100%, 560px);
+  max-height: min(680px, calc(100vh - 48px));
+  display: grid;
+  border: 1px solid #dfe6f0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(23, 35, 60, 0.24);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid #e8edf4;
+  padding: 22px 24px 18px;
+}
+
+.title {
+  margin: 0;
+  color: #17233c;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: #7b8797;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.closeButton {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border: 1px solid #d6deea;
+  border-radius: 7px;
+  color: #526174;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+
+.closeButton:hover {
+  border-color: #b8c4d6;
+  color: #17233c;
+  background: #f7f9fc;
+}
+
+.closeButton:active {
+  transform: translateY(1px);
+}
+
+.rulesList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 8px 24px 18px;
+  list-style: none;
+  overflow: auto;
+}
+
+.rulesList li {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e8edf4;
+  padding: 14px 0 14px 44px;
+  color: #27364e;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.rulesList li:last-child {
+  border-bottom: 0;
+}
+
+.rulesList li::before {
+  content: "i";
+  position: absolute;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #cfd8e6;
+  border-radius: 999px;
+  color: #526174;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .backdrop {
+    padding: 12px;
+  }
+
+  .modal {
+    max-height: calc(100vh - 24px);
+  }
+
+  .header,
+  .rulesList {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

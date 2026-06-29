@@ -5,6 +5,15 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.db.enum import SortOrder, TicketPriority, TicketSortBy, TicketStatus
 
 
+def capitalize_first_letter(value: str) -> str:
+    value = value.strip()
+
+    if not value:
+        return value
+
+    return value[0].upper() + value[1:]
+
+
 class TicketBase(BaseModel):
     title: str = Field(..., min_length=3, max_length=120)
     description: str | None = Field(default=None, max_length=1000)
@@ -12,7 +21,7 @@ class TicketBase(BaseModel):
     @field_validator("title")
     @classmethod
     def normalize_title(cls, value: str) -> str:
-        value = value.strip()
+        value = capitalize_first_letter(value)
 
         if len(value) < 3:
             raise ValueError("Заголовок должен содержать минимум 3 символа")
@@ -25,7 +34,7 @@ class TicketBase(BaseModel):
         if value is None:
             return None
 
-        value = value.strip()
+        value = capitalize_first_letter(value)
         return value or None
 
 

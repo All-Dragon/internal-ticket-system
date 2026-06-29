@@ -69,6 +69,29 @@ async def test_get_tickets_negative_invalid_page_size(client):
     assert response.status_code == 422
 
 
+async def test_get_tickets_search_is_case_insensitive_for_cyrillic(client):
+    await create_ticket(
+        client,
+        title="Заявка на принтер",
+        description="Проверить картридж.",
+        priority="normal",
+    )
+
+    lower_response = await client.get("/tickets", params={"search": "заявка"})
+    upper_response = await client.get("/tickets", params={"search": "ЗАЯВКА"})
+
+    assert lower_response.status_code == 200
+    assert upper_response.status_code == 200
+
+    lower_data = lower_response.json()
+    upper_data = upper_response.json()
+
+    assert lower_data["total"] == 1
+    assert lower_data["items"][0]["title"] == "Заявка на принтер"
+    assert upper_data["total"] == 1
+    assert upper_data["items"][0]["title"] == "Заявка на принтер"
+
+
 async def test_get_ticket_by_id(client, caplog):
     caplog.set_level(logging.INFO, logger="app.services.ticket")
     create_response = await create_ticket(client, title="Monitor issue", priority="normal")
@@ -98,8 +121,8 @@ async def test_create_ticket(client, caplog):
 
     response = await create_ticket(
         client,
-        title="Install IDE",
-        description="Install IDE on a developer workstation.",
+        title="install IDE",
+        description="install IDE on a developer workstation.",
         priority="high",
     )
 
@@ -172,8 +195,8 @@ async def test_update_ticket(client, caplog):
     response = await client.patch(
         f"/tickets/{ticket_id}",
         json={
-            "title": "Updated title",
-            "description": "Updated description.",
+            "title": "updated title",
+            "description": "updated description.",
             "priority": "high",
         },
     )
