@@ -1,0 +1,86 @@
+.root {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 76px;
+  border: 1px solid #dfe6f0;
+  border-radius: 8px;
+  padding: 18px 24px;
+  background: #ffffff;
+  box-shadow: 0 14px 36px rgba(39, 54, 78, 0.07);
+}
+
+.loadingPanel {
+  border-color: #cfe0ff;
+  background: #f7faff;
+}
+
+.emptyPanel {
+  background: #ffffff;
+}
+
+.errorPanel {
+  border-color: #ffd0cc;
+  background: #fff7f6;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  color: #436fe8;
+  border: 2px solid currentColor;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.errorPanel .icon {
+  color: #d92d20;
+}
+
+.content {
+  display: grid;
+  gap: 4px;
+}
+
+.title {
+  margin: 0;
+  color: #27364e;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.text {
+  margin: 0;
+  color: #526174;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.closeButton {
+  align-self: flex-start;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  color: #526174;
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (max-width: 920px) {
+  .root {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

@@ -2,8 +2,8 @@
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  color: #172026;
-  background: #f4f7f8;
+  color: #17233c;
+  background: #f4f7fb;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -16,6 +16,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(244, 247, 251, 0.94)),
+    #f4f7fb;
 }
 
 button,
@@ -25,53 +28,141 @@ textarea {
   font: inherit;
 }
 
-.appShell {
-  min-height: 100vh;
-  display: grid;
-  place-content: center;
-  padding: 32px;
-}
-
-.appPlaceholder {
-  width: min(100%, 720px);
-  border: 1px solid #dde5e8;
-  border-radius: 8px;
-  padding: 32px;
-  background: #ffffff;
-  box-shadow: 0 20px 60px rgba(28, 47, 58, 0.1);
-}
-
-.appEyebrow {
-  margin: 0 0 10px;
-  color: #287c7b;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.appPlaceholder h1 {
-  margin: 0 0 12px;
-  font-size: 36px;
-  line-height: 1.1;
+button {
   letter-spacing: 0;
 }
 
-.appPlaceholder p {
-  margin: 0;
-  color: #5e6d75;
-  line-height: 1.6;
+.appPage {
+  width: min(100%, 1720px);
+  min-height: 100vh;
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-@media (max-width: 520px) {
-  .appShell {
-    padding: 18px;
+.appHeader {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #dfe6f0;
+  border-radius: 8px;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 36px rgba(39, 54, 78, 0.07);
+}
+
+.appTitle {
+  margin: 0;
+  color: #17233c;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.systemPanel,
+.tablePanel {
+  border: 1px solid #dfe6f0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 36px rgba(39, 54, 78, 0.07);
+}
+
+.systemPanel {
+  padding: 24px 32px;
+}
+
+.systemPanel h2 {
+  margin: 0 0 22px;
+  color: #17233c;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.rulesList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rulesList li {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e8edf4;
+  padding: 14px 0 14px 44px;
+  color: #27364e;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.rulesList li:last-child {
+  border-bottom: 0;
+}
+
+.rulesList li::before {
+  content: "i";
+  position: absolute;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #cfd8e6;
+  border-radius: 999px;
+  color: #526174;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tablePanel {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+@media (max-width: 1100px) {
+  .appHeader {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .appPlaceholder {
-    padding: 24px;
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .appPage {
+    gap: 16px;
+    padding: 12px;
   }
 
-  .appPlaceholder h1 {
-    font-size: 28px;
+  .appHeader,
+  .systemPanel,
+  .tablePanel {
+    padding: 16px;
+  }
+
+  .appTitle {
+    font-size: 20px;
+  }
+
+  .rulesList li {
+    padding-left: 38px;
   }
 }

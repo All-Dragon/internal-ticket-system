@@ -170,6 +170,23 @@ function useTicketsPage() {
     await loadTickets(DEFAULT_FILTERS);
   }
 
+  function handleErrorClose(): void {
+    setError("");
+  }
+
+  async function handlePageSizeChange(
+    event: ChangeEvent<HTMLSelectElement>,
+  ): Promise<void> {
+    const nextFilters: TicketFilters = {
+      ...filters,
+      page: 1,
+      page_size: Number(event.target.value),
+    };
+
+    setFilters(nextFilters);
+    await loadTickets(nextFilters);
+  }
+
   return {
     tickets,
     filters,
@@ -185,6 +202,8 @@ function useTicketsPage() {
     handleFilterChange,
     handlePageChange,
     handleResetFilters,
+    handleErrorClose,
+    handlePageSizeChange,
   };
 }
 
