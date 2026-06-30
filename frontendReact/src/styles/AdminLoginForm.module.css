@@ -37,6 +37,8 @@
   outline: none;
   transition:
     border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
     box-shadow 0.18s ease;
 }
 
@@ -52,12 +54,20 @@
   font-weight: 700;
   background: transparent;
   cursor: pointer;
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
   transform: translateY(-50%);
 }
 
 .passwordToggle:hover {
   color: #315fd8;
   background: #eef3ff;
+}
+
+.passwordToggle:active {
+  transform: translateY(-50%) scale(0.96);
 }
 
 .field::placeholder {
@@ -77,6 +87,12 @@
   padding: 0 18px;
   font-weight: 700;
   cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
 }
 
 .submitButton {
@@ -85,16 +101,46 @@
   box-shadow: 0 8px 18px rgba(67, 111, 232, 0.22);
 }
 
+.submitButton:hover {
+  background: #315fd8;
+  box-shadow: 0 10px 22px rgba(67, 111, 232, 0.28);
+}
+
+.submitButton:active,
+.logoutButton:active,
+.errorClose:active {
+  transform: translateY(1px);
+}
+
 .submitButton:disabled,
 .logoutButton:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
+.submitButton:disabled:hover {
+  background: #436fe8;
+  box-shadow: 0 8px 18px rgba(67, 111, 232, 0.22);
+}
+
 .logoutButton {
   color: #34425a;
   background: #ffffff;
   border: 1px solid #d6deea;
+}
+
+.logoutButton:hover {
+  border-color: #b8c4d6;
+  color: #17233c;
+  background: #f7f9fc;
+  box-shadow: 0 8px 18px rgba(39, 54, 78, 0.08);
+}
+
+.logoutButton:disabled:hover {
+  border-color: #d6deea;
+  color: #34425a;
+  background: #ffffff;
+  box-shadow: none;
 }
 
 .state {
@@ -130,6 +176,15 @@
   color: #b42318;
   background: transparent;
   cursor: pointer;
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+
+.errorClose:hover {
+  color: #912018;
+  background: #fff1f0;
 }
 
 @media (max-width: 860px) {

@@ -5,7 +5,7 @@ import {
   validateTicketDescription,
   validateTicketPriority,
   validateTicketTitle,
-} from "../utiles/ticketValidation";
+} from "../utils/ticketValidation";
 
 import type { ChangeEvent, FormEvent } from "react";
 import type { Ticket, TicketUpdate } from "../types/ticket";

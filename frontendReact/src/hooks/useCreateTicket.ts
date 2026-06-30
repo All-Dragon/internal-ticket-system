@@ -5,7 +5,7 @@ import {
   validateTicketDescription,
   validateTicketPriority,
   validateTicketTitle,
-} from "../utiles/ticketValidation";
+} from "../utils/ticketValidation";
 import { DEFAULT_TICKET_FORM_DATA } from "../types/createTicket";
 
 import type { ChangeEvent, FormEvent } from "react";

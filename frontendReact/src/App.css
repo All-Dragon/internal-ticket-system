@@ -32,6 +32,19 @@ button {
   letter-spacing: 0;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(79, 116, 232, 0.28);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  transform: none;
+}
+
 .appPage {
   width: min(100%, 1720px);
   min-height: 100vh;
@@ -83,6 +96,7 @@ button {
   border-color: #b8c4d6;
   color: #17233c;
   background: #f7f9fc;
+  box-shadow: 0 8px 18px rgba(39, 54, 78, 0.08);
 }
 
 .systemInfoButton:active {

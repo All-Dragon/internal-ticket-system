@@ -80,11 +80,17 @@
   cursor: pointer;
   transition:
     background 0.18s ease,
-    box-shadow 0.18s ease;
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
 }
 
 .row:hover {
   background: #f8fbff;
+  box-shadow: inset 3px 0 0 #436fe8;
+}
+
+.row:active {
+  background: #f2f6ff;
 }
 
 .idCell {
@@ -126,12 +132,31 @@
   padding: 0 12px;
   font-weight: 700;
   outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
 }
 
 .prioritySelect {
   display: inline-grid;
   place-items: center;
   width: 128px;
+}
+
+.statusSelect:hover,
+.prioritySelect:hover,
+.pageSizeSelect:hover {
+  border-color: #b8c4d6;
+  filter: brightness(0.99);
+}
+
+.statusSelect:focus,
+.prioritySelect:focus,
+.pageSizeSelect:focus {
+  border-color: #4f74e8;
+  box-shadow: 0 0 0 3px rgba(79, 116, 232, 0.14);
 }
 
 .statusNew {
@@ -270,12 +295,48 @@
   color: #526174;
   background: #ffffff;
   cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
 }
 
 .activePage {
   border-color: #436fe8;
   color: #ffffff;
   background: #436fe8;
+}
+
+.pageButton:hover {
+  border-color: #b8c4d6;
+  color: #17233c;
+  background: #f7f9fc;
+  box-shadow: 0 8px 18px rgba(39, 54, 78, 0.08);
+}
+
+.pageButton:active {
+  transform: translateY(1px);
+}
+
+.activePage:hover {
+  border-color: #315fd8;
+  color: #ffffff;
+  background: #315fd8;
+  box-shadow: 0 8px 18px rgba(67, 111, 232, 0.22);
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageButton:disabled:hover {
+  border-color: #d6deea;
+  color: #526174;
+  background: #ffffff;
+  box-shadow: none;
 }
 
 .pageSize {

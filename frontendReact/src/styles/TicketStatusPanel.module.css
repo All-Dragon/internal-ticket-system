@@ -76,6 +76,19 @@
   color: #526174;
   background: transparent;
   cursor: pointer;
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+
+.closeButton:hover {
+  color: #17233c;
+  background: #f1f5fb;
+}
+
+.closeButton:active {
+  transform: translateY(1px);
 }
 
 @media (max-width: 920px) {

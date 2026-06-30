@@ -1,173 +1,188 @@
-# StarterKit
+# Internal Ticket System
 
-Full-stack starter kit в стиле проекта GTO: FastAPI API, React frontend, PostgreSQL, Redis, Alembic, Docker, nginx и CI.
+Проект выполнен как тестовое задание на стек:
 
-## Что внутри
+- Backend: `Python`, `FastAPI`, `SQLAlchemy`, `Alembic`
+- Frontend: `React`, `TypeScript`, `Vite`
+- Database: `SQLite`
+- Auth: `JWT` для входа администратора
+- Infra: `Docker Compose`, `nginx`
 
-```text
-app/
-  api/main.py              # точка входа FastAPI
-  api/routers/             # HTTP routes
-  core/config_app.py       # чтение env и сборка DB URL
-  core/JWT/                # JWT token, current user, role guard
-  db/database.py           # async SQLAlchemy engine/session
-  db/enum/                 # enum-типы приложения
-  db/models/               # SQLAlchemy models
-  repositories/            # запросы к базе
-  schemas/                 # Pydantic request/response схемы
-  services/                # бизнес-логика
-  scripts/                 # seed/init scripts
-alembic/                   # миграции Alembic
-frontendReact/
-  src/api/                 # функции запросов к backend
-  src/components/          # UI-компоненты
-  src/context/             # AuthContext
-  src/hooks/               # формы и загрузка данных
-  src/layouts/             # layout приложения
-  src/pages/               # страницы роутинга
-  src/styles/              # CSS
-  src/utiles/              # frontend helpers
-nginx/                     # nginx reverse proxy + static frontend
-.github/workflows/ci.yml   # базовый CI
-Dockerfile                 # backend image
-docker-compose.yaml        # db + redis + app + nginx
-requirements.txt           # Python dependencies
-```
+## Что реализовано
 
-Backend-поток:
+- Создание заявки.
+- Просмотр списка заявок.
+- Фильтрация по `status` и `priority`.
+- Поиск по `title` и `description`.
+- Сортировка по дате создания и приоритету.
+- Изменение статуса заявки.
+- Редактирование заявки, если она не в статусе `done`.
+- Удаление заявки только администратором.
+- Пагинация списка.
+- Админский вход.
+- Состояния загрузки, пустого списка и ошибок API.
+- Модальные окна для просмотра, редактирования, создания и подтверждения удаления.
+- Демо-данные для быстрого просмотра приложения.
 
-```text
-router -> service -> repository -> model -> database
-```
+Фронт управляет параметрами поиска, фильтрации, сортировки и пагинации, а итоговая выборка выполняется на backend.
 
-Frontend-поток:
+## Бизнес-правила
 
-```text
-page -> component -> hook -> api module -> authFetch -> backend
-```
+- Администратор нужен только для удаления заявок.
+- Дефолтные креды администратора: `admin:admin`.
+- Заявку в статусе `done` нельзя редактировать.
+- Заявку в статусе `done` нельзя удалить.
+- Заявку нельзя перевести из `done` обратно в другой статус.
+- При нарушении бизнес-правил API возвращает осмысленный HTTP-статус и сообщение об ошибке.
 
-## Env-файлы
+## Требования
 
-В репозиторий коммитятся только examples:
+- Python 3.12
+- Node.js 22+
+- Docker Desktop, если используется Docker-запуск
 
-- `.env.example` для локального запуска без Docker.
-- `.env.docker.example` для запуска через `docker compose`.
+## Переменные окружения
 
-Рабочие файлы создаются копированием:
+В проекте есть два example-файла:
+
+- `.env.example` - для локального запуска backend/frontend;
+- `.env.docker.example` - для запуска через Docker Compose.
+
+Для локального запуска можно создать рабочий `.env`:
 
 ```bash
 copy .env.example .env
 ```
 
-или для Docker:
+Для Docker можно запускать напрямую через example-файл:
 
 ```bash
-copy .env.docker.example .env
+docker compose --env-file .env.docker.example up --build
 ```
 
-Сам `.env` не коммитить.
-
-## Где задавать данные БД
-
-Все настройки backend читаются в `app/core/config_app.py`.
-
-Главные переменные:
+Локальный пример:
 
 ```env
-DB_NAME=starterkit
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=starterkit
-DB_PASSWORD=starterkit
-```
-
-Для локального запуска `DB_HOST=localhost`.
-
-Для Docker `DB_HOST=db`, потому что сервис Postgres в `docker-compose.yaml` называется `db`.
-
-Итоговый async URL собирается функцией:
-
-```python
-generate_url_db()
-```
-
-Она используется в:
-
-- `app/db/database.py`
-- `alembic/env.py`
-
-## JWT-настройки
-
-В `.env`:
-
-```env
-SECRET_KEY=change_me_to_a_long_random_secret
+DATABASE_URL=sqlite+aiosqlite:///./app.db
+API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=http://localhost:8000
+SECRET_KEY=your_super_secret_key_change_this_in_production
 ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin
 ```
 
-JWT-код лежит в:
+Docker-пример:
+
+```env
+DATABASE_URL=sqlite+aiosqlite:////app/data/app.db
+API_BASE_URL=http://app:8000
+VITE_API_BASE_URL=
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin
+SEED_DEMO_DATA=true
+```
+
+Рабочие `.env`-файлы не нужно коммитить.
+
+## Быстрый запуск через Docker
+
+Из корня проекта:
+
+```bash
+docker compose --env-file .env.docker.example up --build
+```
+
+Это основной сценарий запуска для проверки проекта. После выполнения команды приложение уже готово к работе: backend автоматически применяет миграции, создает SQLite-базу в Docker volume и при пустой таблице добавляет демо-заявки.
+
+После запуска приложение будет доступно:
 
 ```text
-app/core/JWT/security.py
-app/core/JWT/auth.py
-app/core/JWT/token_shemas.py
+http://localhost
 ```
 
-## Redis-настройки
+Отдельно запускать миграции для Docker не нужно. Они выполняются автоматически перед стартом API:
 
-Redis уже есть в `docker-compose.yaml`, но в шаблоне он пока только подготовлен в конфиге.
+```bash
+alembic upgrade head
+```
+
+После миграций автоматически запускается заполнение демо-данными:
+
+```bash
+python -m app.utils.mock_data
+```
+
+Демо-данные добавляются только если таблица заявок пустая. При повторном запуске контейнера дубли не создаются.
+
+Если нужно запустить без демо-данных, поменяйте в `.env.docker.example`:
 
 ```env
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_DATABASE=0
-REDIS_USERNAME=
-REDIS_PASSWORD=
+SEED_DEMO_DATA=false
 ```
 
-Для Docker:
+Полезные Docker-команды:
 
-```env
-REDIS_HOST=redis
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose logs -f nginx
+docker compose down
 ```
+
+Полностью удалить SQLite volume и начать с чистой базы:
+
+```bash
+docker compose down -v
+docker compose --env-file .env.docker.example up --build
+```
+
+Важно: при первой сборке Docker должен скачать образы `python`, `node` и `nginx` с Docker Hub. Если сборка падает на `failed to resolve source metadata`, проверьте интернет, DNS или proxy-настройки Docker Desktop.
 
 ## Локальный запуск backend
 
-1. Создать виртуальное окружение:
+Создать и активировать виртуальное окружение:
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-2. Установить зависимости:
+Установить зависимости:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Создать `.env`:
+Создать локальный env-файл:
 
 ```bash
 copy .env.example .env
 ```
 
-4. Убедиться, что PostgreSQL запущен и база из `.env` создана.
-
-5. Применить миграции:
+Применить миграции:
 
 ```bash
 alembic upgrade head
 ```
 
-6. Запустить API:
+При необходимости добавить демо-данные:
+
+```bash
+python -m app.utils.mock_data
+```
+
+Запустить backend:
 
 ```bash
 uvicorn app.api.main:app --reload
 ```
 
-API будет доступно:
+Backend будет доступен:
 
 ```text
 http://localhost:8000
@@ -177,67 +192,87 @@ http://localhost:8000/health
 
 ## Локальный запуск frontend
 
+В отдельном терминале:
+
 ```bash
 cd frontendReact
 npm install
 npm run dev
 ```
 
-Frontend будет доступен обычно на:
+Frontend будет доступен:
 
 ```text
 http://localhost:5173
 ```
 
-`frontendReact/vite.config.js` проксирует backend routes на `http://127.0.0.1:8000`.
+В dev-режиме Vite проксирует `/auth` и `/tickets` на backend `http://127.0.0.1:8000`.
 
-## Docker-запуск
+## API endpoints
 
-1. Создать `.env` для Docker:
-
-```bash
-copy .env.docker.example .env
-```
-
-2. Собрать и запустить:
-
-```bash
-docker compose up --build
-```
-
-В Docker поднимаются:
-
-- `db` PostgreSQL
-- `redis`
-- `app` FastAPI
-- `nginx` frontend + reverse proxy
-
-Контейнер `app` перед запуском API выполняет:
-
-```bash
-alembic upgrade head
-```
-
-После запуска приложение будет доступно через nginx:
+Основные endpoints:
 
 ```text
-http://localhost
+GET    /health
+POST   /auth/login
+GET    /tickets
+GET    /tickets/{id}
+POST   /tickets
+PATCH  /tickets/{id}
+PATCH  /tickets/{id}/status
+DELETE /tickets/{id}
 ```
 
-## Alembic
+`DELETE /tickets/{id}` требует авторизации администратора.
 
-Alembic уже подключен к проекту.
+Параметры списка заявок:
 
-`alembic/env.py` берет:
+```text
+status: new | in_progress | done
+priority: low | normal | high
+search: string
+sort_by: created_at | priority | status
+sort_order: asc | desc
+page: number
+page_size: number
+```
 
-- URL базы из `app.core.config_app.generate_url_db()`
-- metadata моделей из `app.db.models.Base.metadata`
+Swagger UI доступен по адресу:
 
-Создать миграцию:
+```text
+http://localhost:8000/docs
+```
+
+## Тесты и проверки
+
+Backend:
 
 ```bash
-alembic revision --autogenerate -m "initial"
+pytest
 ```
+
+Frontend typecheck:
+
+```bash
+cd frontendReact
+npm run typecheck
+```
+
+Frontend lint:
+
+```bash
+cd frontendReact
+npm run lint
+```
+
+Frontend production build:
+
+```bash
+cd frontendReact
+npm run build
+```
+
+## Миграции
 
 Применить миграции:
 
@@ -245,202 +280,63 @@ alembic revision --autogenerate -m "initial"
 alembic upgrade head
 ```
 
-Откатить последнюю миграцию:
+Создать новую миграцию:
 
 ```bash
-alembic downgrade -1
+alembic revision --autogenerate -m "migration_name"
 ```
 
-Папка миграций:
+Текущая SQLite-база при локальном запуске создается как `app.db` в корне проекта. В Docker база хранится в volume `sqlite_data`.
+
+## Логи
+
+Логи пишутся в консоль и в файл:
 
 ```text
-alembic/versions/
+logs/app.log
 ```
 
-## Как добавить новую backend-сущность
-
-Допустим, нужна сущность `Product`.
-
-1. Создать модель:
-
-```text
-app/db/models/product.py
-```
-
-2. Добавить импорт модели в:
-
-```text
-app/db/models/__init__.py
-```
-
-3. Создать Pydantic-схемы:
-
-```text
-app/schemas/product.py
-```
-
-4. Добавить exports в:
-
-```text
-app/schemas/__init__.py
-```
-
-5. Создать репозиторий:
-
-```text
-app/repositories/product.py
-```
-
-6. Добавить export в:
-
-```text
-app/repositories/__init__.py
-```
-
-7. Создать сервис:
-
-```text
-app/services/product.py
-```
-
-8. Добавить export в:
-
-```text
-app/services/__init__.py
-```
-
-9. Создать роутер:
-
-```text
-app/api/routers/product.py
-```
-
-10. Подключить роутер в:
-
-```text
-app/api/routers/__init__.py
-app/api/main.py
-```
-
-11. Создать миграцию:
+В Docker логи удобнее смотреть так:
 
 ```bash
-alembic revision --autogenerate -m "add products"
-alembic upgrade head
+docker compose logs -f app
 ```
 
-## Как добавить frontend-экран для новой сущности
+Файлы логов не коммитятся.
 
-Для `Product` обычно нужны:
+## Структура проекта
 
 ```text
-frontendReact/src/api/products.js
-frontendReact/src/hooks/useProducts.js
-frontendReact/src/pages/ProductsPage.jsx
+app/
+  api/              FastAPI routes
+  core/             config, JWT, logging
+  db/               database, models, enums, SQLite helpers
+  repositories/     database queries
+  schemas/          Pydantic schemas
+  services/         business logic
+  utils/            demo seed data
+alembic/            migrations
+frontendReact/
+  src/
+    api/            запросы к backend
+    components/     UI-компоненты
+    hooks/          frontend logic и работа с состоянием
+    pages/          страницы приложения
+    styles/         CSS modules
+    types/          TypeScript-типы
+    utils/          frontend helpers и validation
+nginx/              nginx config and frontend image
+tests/              backend tests
 ```
 
-Потом добавить route в:
+Backend использует слойность:
 
 ```text
-frontendReact/src/App.jsx
+router -> service -> repository -> database
 ```
 
-И ссылку в меню:
+Frontend разделен на:
 
 ```text
-frontendReact/src/components/Header.jsx
+page -> component -> hook -> api
 ```
-
-## Auth flow
-
-Регистрация:
-
-```text
-frontend RegisterForm -> useRegisterForm -> api/users.createUser -> POST /users
-```
-
-Логин:
-
-```text
-frontend LoginForm -> useLoginForm -> api/users.loginUser -> POST /auth/login
-```
-
-Профиль:
-
-```text
-AuthContext -> api/users.getUserProfile -> GET /users/me
-```
-
-Защищенные backend routes используют:
-
-```python
-current_user = Depends(get_current_user)
-```
-
-Ролевые routes используют:
-
-```python
-current_user = Depends(require_role("admin"))
-```
-
-## Тесты
-
-Запуск:
-
-```bash
-pytest tests/ -v
-```
-
-CI находится здесь:
-
-```text
-.github/workflows/ci.yml
-```
-
-CI поднимает PostgreSQL и Redis, ставит зависимости, создает тестовую базу и запускает тесты.
-
-## Полезные команды
-
-Backend:
-
-```bash
-uvicorn app.api.main:app --reload
-```
-
-Frontend:
-
-```bash
-cd frontendReact
-npm run dev
-```
-
-Docker:
-
-```bash
-docker compose up --build
-```
-
-Миграции:
-
-```bash
-alembic revision --autogenerate -m "message"
-alembic upgrade head
-```
-
-Тесты:
-
-```bash
-pytest tests/ -v
-```
-
-## Перед первым коммитом
-
-Рекомендуемый порядок:
-
-```bash
-git init
-git add .
-git commit -m "Create GTO-style fullstack starter kit"
-```
-
-Если уже создана первая миграция, проверь, что файл из `alembic/versions/` тоже попал в коммит.

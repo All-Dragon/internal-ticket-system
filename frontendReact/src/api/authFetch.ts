@@ -1,4 +1,4 @@
-import { getApiErrorMessage } from '../utiles/getApiErrorMessage';
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 
 import type { ApiError } from '../types/api';
 
