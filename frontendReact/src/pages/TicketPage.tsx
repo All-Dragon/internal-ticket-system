@@ -121,6 +121,7 @@ function TicketPage() {
         <TicketDashboardPanel
           tickets={ticketsPage.tickets}
           total={ticketsPage.total}
+          activeQuickFilter={ticketsPage.activeQuickFilter}
           onStatusFilter={ticketsPage.handleStatusQuickFilter}
           onPriorityFilter={ticketsPage.handlePriorityQuickFilter}
           onResetFilter={ticketsPage.handleResetFilters}

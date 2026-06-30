@@ -1,18 +1,27 @@
 import styles from "../styles/TicketDashboardPanel.module.css";
 
+import type { ActiveQuickFilter } from "../hooks/useTicketsPage";
 import type { Ticket, TicketPriority, TicketStatus } from "../types/ticket";
 
 type TicketDashboardPanelProps = {
   tickets: Ticket[];
   total: number;
+  activeQuickFilter: ActiveQuickFilter;
   onStatusFilter: (status: "" | TicketStatus) => void;
   onPriorityFilter: (priority: "" | TicketPriority) => void;
   onResetFilter: () => void;
 };
 
+function getActionClassName(isActive: boolean): string {
+  return isActive
+    ? `${styles.actionButton} ${styles.activeActionButton}`
+    : styles.actionButton;
+}
+
 function TicketDashboardPanel({
   tickets,
   total,
+  activeQuickFilter,
   onStatusFilter,
   onPriorityFilter,
   onResetFilter,
@@ -71,42 +80,47 @@ function TicketDashboardPanel({
             className={styles.actionButton}
             type="button"
             onClick={onResetFilter}
+            aria-pressed={false}
           >
             <strong>Все заявки</strong>
             <span>Показать все заявки</span>
           </button>
 
           <button
-            className={styles.actionButton}
+            className={getActionClassName(activeQuickFilter === "new")}
             type="button"
             onClick={() => onStatusFilter("new")}
+            aria-pressed={activeQuickFilter === "new"}
           >
             <strong>Новые</strong>
             <span>Только New</span>
           </button>
 
           <button
-            className={styles.actionButton}
+            className={getActionClassName(activeQuickFilter === "in_progress")}
             type="button"
             onClick={() => onStatusFilter("in_progress")}
+            aria-pressed={activeQuickFilter === "in_progress"}
           >
             <strong>В работе</strong>
             <span>Только In Progress</span>
           </button>
 
           <button
-            className={styles.actionButton}
+            className={getActionClassName(activeQuickFilter === "done")}
             type="button"
             onClick={() => onStatusFilter("done")}
+            aria-pressed={activeQuickFilter === "done"}
           >
             <strong>Закрытые</strong>
             <span>Только Done</span>
           </button>
 
           <button
-            className={styles.actionButton}
+            className={getActionClassName(activeQuickFilter === "priority_high")}
             type="button"
             onClick={() => onPriorityFilter("high")}
+            aria-pressed={activeQuickFilter === "priority_high"}
           >
             <strong>Высокий приоритет</strong>
             <span>Только High</span>

@@ -166,25 +166,43 @@ function TicketDetailsModal({
         </div>
 
         <footer className={styles.actions}>
-          <button
-            className={styles.editButton}
-            type="button"
-            disabled={isDone}
-            onClick={() => onEdit(ticket)}
-          >
-            Редактировать
-          </button>
+          {isDone ? (
+            <p className={styles.actionHint}>
+              Завершённые заявки недоступны для редактирования и удаления.
+            </p>
+          ) : null}
 
-          {isAdmin && (
+          <div className={styles.actionButtons}>
             <button
-              className={styles.deleteButton}
+              className={styles.editButton}
               type="button"
               disabled={isDone}
-              onClick={() => onDelete(ticket)}
+              onClick={() => onEdit(ticket)}
+              title={
+                isDone
+                  ? "Заявку в статусе Done нельзя редактировать"
+                  : "Редактировать заявку"
+              }
             >
-              Удалить заявку
+              Редактировать
             </button>
-          )}
+
+            {isAdmin && (
+              <button
+                className={styles.deleteButton}
+                type="button"
+                disabled={isDone}
+                onClick={() => onDelete(ticket)}
+                title={
+                  isDone
+                    ? "Заявку в статусе Done нельзя удалить"
+                    : "Удалить заявку"
+                }
+              >
+                Удалить заявку
+              </button>
+            )}
+          </div>
         </footer>
       </section>
     </div>

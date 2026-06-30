@@ -17,6 +17,11 @@ import type {
 } from "../types/ticket";
 import type { TicketFilters } from "../types/ticketPage";
 
+export type ActiveQuickFilter =
+  | ""
+  | TicketStatus
+  | `priority_${TicketPriority}`;
+
 function buildParams(filters: TicketFilters): TicketListParams {
   return {
     status: filters.status || undefined,
@@ -37,6 +42,8 @@ function getErrorMessage(err: unknown, fallback: string): string {
 function useTicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filters, setFilters] = useState<TicketFilters>(DEFAULT_FILTERS);
+  const [activeQuickFilter, setActiveQuickFilter] =
+    useState<ActiveQuickFilter>("");
 
   const [total, setTotal] = useState<number>(0);
   const [pages, setPages] = useState<number>(0);
@@ -152,6 +159,7 @@ function useTicketsPage() {
       page: 1,
     };
 
+    setActiveQuickFilter("");
     setFilters(nextFilters);
     await loadTickets(nextFilters);
   }
@@ -167,6 +175,7 @@ function useTicketsPage() {
   }
 
   async function handleResetFilters(): Promise<void> {
+    setActiveQuickFilter("");
     setFilters(DEFAULT_FILTERS);
     await loadTickets(DEFAULT_FILTERS);
   }
@@ -191,12 +200,17 @@ function useTicketsPage() {
   async function handleStatusQuickFilter(
     status: "" | TicketStatus,
   ): Promise<void> {
+    const isActiveQuickFilter = activeQuickFilter === status;
+    const nextStatus = isActiveQuickFilter ? "" : status;
+
     const nextFilters: TicketFilters = {
       ...filters,
-      status,
+      status: nextStatus,
+      priority: "",
       page: 1,
     };
 
+    setActiveQuickFilter(nextStatus);
     setFilters(nextFilters);
     await loadTickets(nextFilters);
   }
@@ -204,12 +218,18 @@ function useTicketsPage() {
   async function handlePriorityQuickFilter(
     priority: "" | TicketPriority,
   ): Promise<void> {
+    const quickFilter: ActiveQuickFilter = priority ? `priority_${priority}` : "";
+    const isActiveQuickFilter = activeQuickFilter === quickFilter;
+    const nextPriority = isActiveQuickFilter ? "" : priority;
+
     const nextFilters: TicketFilters = {
       ...filters,
-      priority,
+      status: "",
+      priority: nextPriority,
       page: 1,
     };
 
+    setActiveQuickFilter(isActiveQuickFilter ? "" : quickFilter);
     setFilters(nextFilters);
     await loadTickets(nextFilters);
   }
@@ -219,6 +239,7 @@ function useTicketsPage() {
     filters,
     total,
     pages,
+    activeQuickFilter,
     loading,
     updatingTicketId,
     deletingTicketId,

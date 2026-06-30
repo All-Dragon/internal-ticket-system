@@ -246,6 +246,12 @@ function TicketTable({
                           {isDeleting ? "..." : "Удалить"}
                         </button>
                       ) : null}
+
+                      {isDone ? (
+                        <span className={styles.actionHint}>
+                          Завершённые заявки недоступны для редактирования.
+                        </span>
+                      ) : null}
                     </div>
                   </td>
                 </tr>
