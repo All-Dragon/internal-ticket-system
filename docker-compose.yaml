@@ -1,38 +1,23 @@
 services:
-  redis:
-    image: redis:7-alpine
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
-
   app:
     build: .
     expose:
       - "8000"
     environment:
       DATABASE_URL: ${DATABASE_URL:-sqlite+aiosqlite:////app/data/app.db}
-      REDIS_HOST: redis
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_DATABASE: ${REDIS_DATABASE:-0}
-      REDIS_USERNAME: ${REDIS_USERNAME:-}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       API_BASE_URL: ${API_BASE_URL:-http://localhost}
       SECRET_KEY: ${SECRET_KEY:-change-me-in-real-projects}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
     command: >
       sh -c "alembic upgrade head &&
+             python -m app.utils.mock_data &&
              uvicorn app.api.main:app --host 0.0.0.0 --port 8000"
     volumes:
       - sqlite_data:/app/data
-    depends_on:
-      redis:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read()"]
       interval: 10s

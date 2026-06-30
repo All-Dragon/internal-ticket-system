@@ -7,6 +7,7 @@ type TicketDashboardPanelProps = {
   total: number;
   onStatusFilter: (status: "" | TicketStatus) => void;
   onPriorityFilter: (priority: "" | TicketPriority) => void;
+  onResetFilter: () => void;
 };
 
 function TicketDashboardPanel({
@@ -14,6 +15,7 @@ function TicketDashboardPanel({
   total,
   onStatusFilter,
   onPriorityFilter,
+  onResetFilter,
 }: TicketDashboardPanelProps) {
   const newCount = tickets.filter((ticket) => ticket.status === "new").length;
   const inProgressCount = tickets.filter(
@@ -68,10 +70,10 @@ function TicketDashboardPanel({
           <button
             className={styles.actionButton}
             type="button"
-            onClick={() => onStatusFilter("")}
+            onClick={onResetFilter}
           >
             <strong>Все заявки</strong>
-            <span>Сбросить статус</span>
+            <span>Показать все заявки</span>
           </button>
 
           <button

@@ -28,18 +28,8 @@ class AdminCredentials:
 
 
 @dataclass
-class RedisSettings:
-    host: str
-    port: int
-    db: int
-    password: str
-    username: str
-
-
-@dataclass
 class Config:
     db: DatabaseSettings
-    redis: RedisSettings
     api: APISettings
     jwt: JWTSettings
     adminCred: AdminCredentials
@@ -51,14 +41,6 @@ def load_config(path: str | None = None) -> Config:
 
     db = DatabaseSettings(
         url=env("DATABASE_URL", "sqlite+aiosqlite:///./app.db"),
-    )
-
-    redis = RedisSettings(
-        host=env("REDIS_HOST", "localhost"),
-        port=env.int("REDIS_PORT", 6379),
-        db=env.int("REDIS_DATABASE", 0),
-        password=env("REDIS_PASSWORD", default=""),
-        username=env("REDIS_USERNAME", default=""),
     )
 
     api = APISettings(
@@ -76,7 +58,7 @@ def load_config(path: str | None = None) -> Config:
         password=env("ADMIN_PASSWORD"),
     )
 
-    return Config(db=db, redis=redis, api=api, jwt=jwt, adminCred=admin_cred)
+    return Config(db=db, api=api, jwt=jwt, adminCred=admin_cred)
 
 
 def generate_url_db():

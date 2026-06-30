@@ -9,6 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 os.environ.setdefault("ADMIN_USERNAME", "admin")
 os.environ.setdefault("ADMIN_PASSWORD", "admin")
+os.environ.setdefault("LOG_TO_FILE", "false")
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
@@ -21,7 +22,7 @@ from app.db.database import get_async_session
 from app.db.models import Base
 from app.db.sqlite_functions import register_sqlite_functions
 
-for logger_name in ["api", "Bot", "uvicorn", "uvicorn.access", "uvicorn.error"]:
+for logger_name in ["app", "uvicorn", "uvicorn.access", "uvicorn.error"]:
     logger = logging.getLogger(logger_name)
     for handler in logger.handlers[:]:
         if isinstance(handler, logging.FileHandler):
