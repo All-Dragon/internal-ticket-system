@@ -91,7 +91,7 @@ button {
 
 .topGrid {
   display: grid;
-  grid-template-columns: minmax(320px, 560px);
+  grid-template-columns: minmax(320px, 560px) minmax(0, 1fr);
   gap: 24px;
   align-items: stretch;
 }

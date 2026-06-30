@@ -13,7 +13,7 @@ type TicketTableProps = {
   updatingTicketId: number | null;
   deletingTicketId: number | null;
   onStatusChange: (id: number, status: TicketStatus) => void;
-  onDelete: (id: number) => void;
+  onDelete: (ticket: Ticket) => void;
   onEdit: (ticket: Ticket) => void;
   onView: (ticket: Ticket) => void;
   onPageChange: (page: number) => void;
@@ -235,7 +235,7 @@ function TicketTable({
                           disabled={!canDelete || isDeleting}
                           onClick={(event) => {
                             event.stopPropagation();
-                            onDelete(ticket.id);
+                            onDelete(ticket);
                           }}
                           title={
                             isDone

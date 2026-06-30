@@ -92,7 +92,7 @@ function TicketFilters({ filters, onChange, onReset }: TicketFiltersProps) {
       </label>
 
       <button className={styles.resetButton} type="button" onClick={onReset}>
-        Сбросить
+        Сбросить фильтры
       </button>
     </div>
   );

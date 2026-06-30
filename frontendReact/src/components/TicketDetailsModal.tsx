@@ -7,7 +7,7 @@ type TicketDetailsModalProps = {
   isAdmin: boolean;
   onClose: () => void;
   onEdit: (ticket: Ticket) => void;
-  onDelete: (id: number) => void;
+  onDelete: (ticket: Ticket) => void;
 };
 
 const statusLabels: Record<Ticket["status"], string> = {
@@ -180,7 +180,7 @@ function TicketDetailsModal({
               className={styles.deleteButton}
               type="button"
               disabled={isDone}
-              onClick={() => onDelete(ticket.id)}
+              onClick={() => onDelete(ticket)}
             >
               Удалить заявку
             </button>

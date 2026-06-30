@@ -12,6 +12,7 @@ import type { ApiError } from "../types/api";
 import type {
   Ticket,
   TicketListParams,
+  TicketPriority,
   TicketStatus,
 } from "../types/ticket";
 import type { TicketFilters } from "../types/ticketPage";
@@ -187,6 +188,32 @@ function useTicketsPage() {
     await loadTickets(nextFilters);
   }
 
+  async function handleStatusQuickFilter(
+    status: "" | TicketStatus,
+  ): Promise<void> {
+    const nextFilters: TicketFilters = {
+      ...filters,
+      status,
+      page: 1,
+    };
+
+    setFilters(nextFilters);
+    await loadTickets(nextFilters);
+  }
+
+  async function handlePriorityQuickFilter(
+    priority: "" | TicketPriority,
+  ): Promise<void> {
+    const nextFilters: TicketFilters = {
+      ...filters,
+      priority,
+      page: 1,
+    };
+
+    setFilters(nextFilters);
+    await loadTickets(nextFilters);
+  }
+
   return {
     tickets,
     filters,
@@ -204,6 +231,8 @@ function useTicketsPage() {
     handleResetFilters,
     handleErrorClose,
     handlePageSizeChange,
+    handleStatusQuickFilter,
+    handlePriorityQuickFilter,
   };
 }
 

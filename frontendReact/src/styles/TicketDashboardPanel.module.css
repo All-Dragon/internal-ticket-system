@@ -1,0 +1,174 @@
+.panel {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  min-width: 0;
+  border: 1px solid #dfe6f0;
+  border-radius: 8px;
+  padding: 24px 28px;
+  background: #ffffff;
+  box-shadow: 0 14px 36px rgba(39, 54, 78, 0.07);
+}
+
+.title,
+.subtitle {
+  margin: 0;
+  color: #17233c;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.subtitle {
+  font-size: 16px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.statItem {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e8edf4;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfcfe;
+}
+
+.statIcon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.totalIcon {
+  color: #2454d6;
+  background: #eff4ff;
+}
+
+.newIcon {
+  color: #2454d6;
+  background: #eff4ff;
+}
+
+.progressIcon {
+  color: #b76e00;
+  background: #fff7e8;
+}
+
+.doneIcon {
+  color: #067647;
+  background: #ecfdf3;
+}
+
+.statValue {
+  display: block;
+  color: #17233c;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 4px;
+  color: #526174;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.actionsBlock {
+  display: grid;
+  gap: 14px;
+  border-top: 1px solid #e8edf4;
+  padding-top: 20px;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actionButton {
+  min-height: 64px;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  align-content: center;
+  border: 1px solid #d6deea;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #27364e;
+  text-align: left;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+.actionButton strong {
+  min-width: 0;
+  color: #17233c;
+  font-size: 13px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionButton span {
+  min-width: 0;
+  color: #7b8797;
+  font-size: 12px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionButton:hover {
+  border-color: #b8c4d6;
+  background: #f8fbff;
+  box-shadow: 0 8px 18px rgba(39, 54, 78, 0.08);
+}
+
+.actionButton:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 1320px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actionsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .panel {
+    padding: 16px;
+  }
+
+  .statsGrid,
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,9 +2,11 @@ import { useState } from "react";
 
 import AdminLoginForm from "./components/AdminLoginForm";
 import TicketCreateForm from "./components/TicketCreateForm";
+import TicketDeleteConfirmModal from "./components/TicketDeleteConfirmModal";
 import TicketDetailsModal from "./components/TicketDetailsModal";
 import TicketEditModal from "./components/TicketEditModal";
 import TicketFilters from "./components/TicketFilters";
+import TicketDashboardPanel from "./components/TicketDashboardPanel";
 import SystemInfoModal from "./components/SystemInfoModal";
 import TicketStatusPanel from "./components/TicketStatusPanel";
 import TicketTable from "./components/TicketTable";
@@ -30,6 +32,7 @@ function App() {
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
   const [viewingTicket, setViewingTicket] = useState<Ticket | null>(null);
   const [isSystemInfoOpen, setIsSystemInfoOpen] = useState<boolean>(false);
+  const [deletingTicket, setDeletingTicket] = useState<Ticket | null>(null);
 
   function handleViewTicket(ticket: Ticket): void {
     setViewingTicket(ticket);
@@ -61,17 +64,30 @@ function App() {
     handleEditTicket(ticket);
   }
 
-  async function handleDetailsDelete(id: number): Promise<void> {
-    await ticketsPage.handleDeleteTicket(id);
-    setViewingTicket(null);
-  }
-
   function handleSystemInfoOpen(): void {
     setIsSystemInfoOpen(true);
   }
 
   function handleSystemInfoClose(): void {
     setIsSystemInfoOpen(false);
+  }
+
+  function handleDeleteRequest(ticket: Ticket): void {
+    if (ticket.status === "done") {
+      return;
+    }
+
+    setDeletingTicket(ticket);
+  }
+
+  function handleDeleteCancel(): void {
+    setDeletingTicket(null);
+  }
+
+  async function handleDeleteConfirm(id: number): Promise<void> {
+    await ticketsPage.handleDeleteTicket(id);
+    setDeletingTicket(null);
+    setViewingTicket(null);
   }
 
   const isTicketsEmpty = !ticketsPage.loading && ticketsPage.tickets.length === 0;
@@ -103,6 +119,13 @@ function App() {
 
       <section className="topGrid">
         <TicketCreateForm onCreated={handleTicketCreated} />
+
+        <TicketDashboardPanel
+          tickets={ticketsPage.tickets}
+          total={ticketsPage.total}
+          onStatusFilter={ticketsPage.handleStatusQuickFilter}
+          onPriorityFilter={ticketsPage.handlePriorityQuickFilter}
+        />
       </section>
 
       <section className="tablePanel">
@@ -121,7 +144,7 @@ function App() {
           updatingTicketId={ticketsPage.updatingTicketId}
           deletingTicketId={ticketsPage.deletingTicketId}
           onStatusChange={ticketsPage.handleStatusChange}
-          onDelete={ticketsPage.handleDeleteTicket}
+          onDelete={handleDeleteRequest}
           onEdit={handleEditTicket}
           onView={handleViewTicket}
           onPageChange={ticketsPage.handlePageChange}
@@ -152,13 +175,20 @@ function App() {
           isAdmin={adminAuth.isAdmin}
           onClose={handleViewClose}
           onEdit={handleDetailsEdit}
-          onDelete={handleDetailsDelete}
+          onDelete={handleDeleteRequest}
         />
       )}
 
-      {isSystemInfoOpen && (
-        <SystemInfoModal onClose={handleSystemInfoClose} />
+      {deletingTicket && (
+        <TicketDeleteConfirmModal
+          ticket={deletingTicket}
+          loading={ticketsPage.deletingTicketId === deletingTicket.id}
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+        />
       )}
+
+      {isSystemInfoOpen && <SystemInfoModal onClose={handleSystemInfoClose} />}
     </main>
   );
 }
