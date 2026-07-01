@@ -39,7 +39,6 @@ function SystemInfoModal({ onClose }: SystemInfoModalProps) {
           <li>Удаление заявки доступно только администратору.</li>
           <li>Все даты и время указаны в UTC.</li>
           <li>При нажатии на заявку откроется подробное окно просмотра заявки.</li>
-          <li></li>
         </ul>
       </section>
     </div>
