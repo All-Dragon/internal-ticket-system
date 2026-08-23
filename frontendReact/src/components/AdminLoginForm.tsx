@@ -45,7 +45,7 @@ function AdminLoginForm({
         </div>
 
         {error && (
-          <p className={styles.error}>
+          <p className={styles.error} role="alert">
             {error}
             <button
               className={styles.errorClose}
@@ -108,7 +108,7 @@ function AdminLoginForm({
       </form>
 
       {error && (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           {error}
           <button
             className={styles.errorClose}

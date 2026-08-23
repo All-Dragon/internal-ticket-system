@@ -240,3 +240,8 @@ venv/
 .DS_Store
 .env.docker
 *.log
+
+allure-results/
+allure-report/
+test-results/
+playwright-report/
