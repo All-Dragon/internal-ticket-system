@@ -104,7 +104,14 @@ jobs:
           up -d --build
       
       - name: Wait for application
-        run: curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:8080/health
+        run: >-
+          curl --fail --silent --show-error
+          --retry 30
+          --retry-delay 2
+          --retry-all-errors
+          --connect-timeout 5
+          --max-time 10
+          http://localhost:8080/health
 
       - name: Run E2E tests
         run: >-
