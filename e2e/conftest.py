@@ -9,22 +9,24 @@ from e2e.pages.ticket_page import TicketPage
 from e2e.fixtures import (
     admin_credentials,
     admin_ticket_page,
-    ticket_factory,
+    ticket_data_factory,
 )
 
 __all__ = [
     "admin_credentials",
     "admin_ticket_page",
-    "ticket_factory",
+    "ticket_data_factory",
 ]
 
 
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args: dict) -> dict:
-
     return {
         **browser_context_args,
-        "base_url": e2e_config.base_url,
+        "base_url": (
+            browser_context_args.get("base_url")
+            or e2e_config.base_url
+        ),
         "locale": "ru-RU",
         "timezone_id": "UTC",
         "viewport": {

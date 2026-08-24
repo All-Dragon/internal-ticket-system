@@ -14,7 +14,7 @@ class TicketData:
     priority: TicketPriority
     
 @pytest.fixture
-def ticket_factory():
+def ticket_data_factory():
     def build_ticket(
         title: str | None = None,
         description: str | None = None,

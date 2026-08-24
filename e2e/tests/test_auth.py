@@ -17,15 +17,15 @@ def test_admin_can_login(
     admin_credentials: AdminCredentials,
 ):
     ticket_page.open()
-    ticket_page.login(
+    ticket_page.auth.login(
         username=admin_credentials.username,
         password=admin_credentials.password
     )
     
     with allure.step("Проверить успешную авторизацию"):
-        expect(ticket_page.admin_status).to_be_visible()
-        expect(ticket_page.logout_button).to_be_enabled()
-        expect(ticket_page.login_button).not_to_be_visible()
+        expect(ticket_page.auth.admin_status).to_be_visible()
+        expect(ticket_page.auth.logout_button).to_be_enabled()
+        expect(ticket_page.auth.login_button).not_to_be_visible()
     
 
 @allure.feature("Авторизация")
@@ -48,15 +48,15 @@ def test_admin_cannot_login_with_missing_credentials(
     password: str 
 ):
     ticket_page.open()
-    ticket_page.login(
+    ticket_page.auth.login(
         username=username,
         password=password
     )
     
     with allure.step("Проверить сообщение об обязательных полях"):
-        expect(ticket_page.error_message).to_contain_text("Введите логин и пароль администратора")
-        expect(ticket_page.admin_status).not_to_be_visible()
-        expect(ticket_page.logout_button).not_to_be_visible()
+        expect(ticket_page.auth.error_message).to_contain_text("Введите логин и пароль администратора")
+        expect(ticket_page.auth.admin_status).not_to_be_visible()
+        expect(ticket_page.auth.logout_button).not_to_be_visible()
         
     
 @allure.feature("Авторизация")
@@ -82,17 +82,17 @@ def test_admin_cannot_login_with_invalid_credentials(
     password: str,
 ):
     ticket_page.open()
-    ticket_page.login(
+    ticket_page.auth.login(
         username=username,
         password=password,
     )
 
     with allure.step("Проверить ошибку неверных учётных данных"):
-        expect(ticket_page.error_message).to_contain_text(
+        expect(ticket_page.auth.error_message).to_contain_text(
             "Неверный логин или пароль администратора"
         )
-        expect(ticket_page.admin_status).not_to_be_visible()
-        expect(ticket_page.logout_button).not_to_be_visible()
+        expect(ticket_page.auth.admin_status).not_to_be_visible()
+        expect(ticket_page.auth.logout_button).not_to_be_visible()
         
         
         
@@ -107,18 +107,18 @@ def test_admin_can_close_login_error(
 ):
     ticket_page.open()
 
-    ticket_page.login(
+    ticket_page.auth.login(
         username="wrong@mail.ru",
         password="wrong-password",
     )
 
     with allure.step("Проверить отображение ошибки авторизации"):
-        expect(ticket_page.error_message).to_be_visible()
+        expect(ticket_page.auth.error_message).to_be_visible()
 
-    ticket_page.close_login_error()
+    ticket_page.auth.close_login_error()
 
     with allure.step("Проверить закрытие сообщения об ошибке"):
-        expect(ticket_page.error_message).not_to_be_visible()
+        expect(ticket_page.auth.error_message).not_to_be_visible()
 
 
 @allure.feature("Авторизация")
@@ -130,11 +130,10 @@ def test_admin_can_close_login_error(
 def test_admin_can_logout(
     admin_ticket_page: TicketPage
 ):
-    admin_ticket_page.logout()
+    admin_ticket_page.auth.logout()
 
     with allure.step("Проверить успешный выход администратора"):
-        expect(admin_ticket_page.admin_status).not_to_be_visible()
-        expect(admin_ticket_page.logout_button).not_to_be_visible()
-        expect(admin_ticket_page.login_button).to_be_visible()
-        expect(admin_ticket_page.login_button).to_be_enabled()
-    
+        expect(admin_ticket_page.auth.admin_status).not_to_be_visible()
+        expect(admin_ticket_page.auth.logout_button).not_to_be_visible()
+        expect(admin_ticket_page.auth.login_button).to_be_visible()
+        expect(admin_ticket_page.auth.login_button).to_be_enabled()

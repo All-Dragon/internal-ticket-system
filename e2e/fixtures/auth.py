@@ -24,7 +24,7 @@ def admin_ticket_page(
     admin_credentials: AdminCredentials
 ) -> TicketPage:
     ticket_page.open()
-    ticket_page.login(
+    ticket_page.auth.login(
         username=admin_credentials.username,
         password=admin_credentials.password
     )

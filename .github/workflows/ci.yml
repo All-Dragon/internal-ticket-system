@@ -74,7 +74,7 @@ jobs:
     needs: [api-tests, frontend]
 
     env:
-      E2E_BASE_URL: http://localhost
+      E2E_BASE_URL: http://localhost:8080
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: admin
 
@@ -97,10 +97,14 @@ jobs:
         run: python -m playwright install --with-deps chromium
         
       - name: Start application
-        run: docker compose --env-file .env.docker.example up -d --build
+        run: >-
+          docker compose
+          -p internal-ticket-system-e2e
+          --env-file e2e/.env.e2e.example
+          up -d --build
       
       - name: Wait for application
-        run: curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost/health
+        run: curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:8080/health
 
       - name: Run E2E tests
         run: >-
@@ -124,9 +128,17 @@ jobs:
 
       - name: Show Docker logs
         if: failure()
-        run: docker compose --env-file .env.docker.example logs --no-color
+        run: >-
+          docker compose
+          -p internal-ticket-system-e2e
+          --env-file e2e/.env.e2e.example
+          logs --no-color
 
       - name: Stop application
         if: always()
-        run: docker compose --env-file .env.docker.example down -v
+        run: >-
+          docker compose
+          -p internal-ticket-system-e2e
+          --env-file e2e/.env.e2e.example
+          down -v
     
