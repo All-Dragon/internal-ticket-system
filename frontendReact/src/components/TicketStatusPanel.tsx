@@ -18,9 +18,14 @@ function TicketStatusPanel({
   }
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} aria-busy={loading}>
       {loading && (
-        <section className={`${styles.panel} ${styles.loadingPanel}`}>
+        <section
+          className={`${styles.panel} ${styles.loadingPanel}`}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span className={styles.icon} aria-hidden="true">
             ...
           </span>
@@ -32,7 +37,12 @@ function TicketStatusPanel({
       )}
 
       {!loading && isEmpty && (
-        <section className={`${styles.panel} ${styles.emptyPanel}`}>
+        <section
+          className={`${styles.panel} ${styles.emptyPanel}`}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span className={styles.icon} aria-hidden="true">
             -
           </span>
@@ -46,7 +56,11 @@ function TicketStatusPanel({
       )}
 
       {error && (
-        <section className={`${styles.panel} ${styles.errorPanel}`}>
+        <section
+          className={`${styles.panel} ${styles.errorPanel}`}
+          role="alert"
+          aria-atomic="true"
+        >
           <span className={styles.icon} aria-hidden="true">
             !
           </span>

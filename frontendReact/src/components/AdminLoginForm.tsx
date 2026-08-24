@@ -45,8 +45,8 @@ function AdminLoginForm({
         </div>
 
         {error && (
-          <p className={styles.error} role="alert">
-            {error}
+          <div className={styles.error} role="alert">
+            <span>{error}</span>
             <button
               className={styles.errorClose}
               type="button"
@@ -55,7 +55,7 @@ function AdminLoginForm({
             >
               x
             </button>
-          </p>
+          </div>
         )}
       </div>
     );
@@ -64,33 +64,47 @@ function AdminLoginForm({
   return (
     <div className={styles.root}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <label className={styles.inputGroup}>
+        <label className={styles.visuallyHidden} htmlFor="admin-username">
+          Логин
+        </label>
+        <div className={styles.inputGroup}>
           <span className={styles.inputIcon} aria-hidden="true">
             @
           </span>
           <input
             className={styles.field}
+            id="admin-username"
             type="text"
             name="username"
             value={formData.username}
             onChange={onChange}
             placeholder="Логин"
             autoComplete="username"
+            aria-required="true"
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? "admin-auth-error" : undefined}
           />
-        </label>
+        </div>
 
-        <label className={styles.inputGroup}>
+        <label className={styles.visuallyHidden} htmlFor="admin-password">
+          Пароль
+        </label>
+        <div className={styles.inputGroup}>
           <span className={styles.inputIcon} aria-hidden="true">
             #
           </span>
           <input
             className={styles.field}
+            id="admin-password"
             type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
             onChange={onChange}
             placeholder="Пароль"
             autoComplete="current-password"
+            aria-required="true"
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? "admin-auth-error" : undefined}
           />
           <button
             className={styles.passwordToggle}
@@ -100,7 +114,7 @@ function AdminLoginForm({
           >
             {showPassword ? "Скрыть" : "Показать"}
           </button>
-        </label>
+        </div>
 
         <button className={styles.submitButton} type="submit" disabled={loading}>
           {loading ? "Вход..." : "Войти"}
@@ -108,8 +122,8 @@ function AdminLoginForm({
       </form>
 
       {error && (
-        <p className={styles.error} role="alert">
-          {error}
+        <div className={styles.error} role="alert">
+          <span id="admin-auth-error">{error}</span>
           <button
             className={styles.errorClose}
             type="button"
@@ -118,7 +132,7 @@ function AdminLoginForm({
           >
             x
           </button>
-        </p>
+        </div>
       )}
     </div>
   );

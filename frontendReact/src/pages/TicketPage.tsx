@@ -75,6 +75,7 @@ function TicketPage() {
       return;
     }
 
+    setViewingTicket(null);
     setDeletingTicket(ticket);
   }
 
@@ -89,6 +90,10 @@ function TicketPage() {
   }
 
   const isTicketsEmpty = !ticketsPage.loading && ticketsPage.tickets.length === 0;
+  const isAllTicketsActive =
+    ticketsPage.filters.status === "" &&
+    ticketsPage.filters.priority === "" &&
+    ticketsPage.filters.search.trim() === "";
 
   return (
     <main className="appPage">
@@ -122,6 +127,7 @@ function TicketPage() {
           tickets={ticketsPage.tickets}
           total={ticketsPage.total}
           activeQuickFilter={ticketsPage.activeQuickFilter}
+          isAllTicketsActive={isAllTicketsActive}
           onStatusFilter={ticketsPage.handleStatusQuickFilter}
           onPriorityFilter={ticketsPage.handlePriorityQuickFilter}
           onResetFilter={ticketsPage.handleResetFilters}

@@ -7,6 +7,7 @@ type TicketDashboardPanelProps = {
   tickets: Ticket[];
   total: number;
   activeQuickFilter: ActiveQuickFilter;
+  isAllTicketsActive: boolean;
   onStatusFilter: (status: "" | TicketStatus) => void;
   onPriorityFilter: (priority: "" | TicketPriority) => void;
   onResetFilter: () => void;
@@ -22,6 +23,7 @@ function TicketDashboardPanel({
   tickets,
   total,
   activeQuickFilter,
+  isAllTicketsActive,
   onStatusFilter,
   onPriorityFilter,
   onResetFilter,
@@ -40,7 +42,12 @@ function TicketDashboardPanel({
 
       <div className={styles.statsGrid}>
         <article className={styles.statItem}>
-          <span className={`${styles.statIcon} ${styles.totalIcon}`}>#</span>
+          <span
+            className={`${styles.statIcon} ${styles.totalIcon}`}
+            aria-hidden="true"
+          >
+            #
+          </span>
           <div>
             <strong className={styles.statValue}>{total}</strong>
             <span className={styles.statLabel}>Найдено заявок</span>
@@ -48,7 +55,12 @@ function TicketDashboardPanel({
         </article>
 
         <article className={styles.statItem}>
-          <span className={`${styles.statIcon} ${styles.newIcon}`}>N</span>
+          <span
+            className={`${styles.statIcon} ${styles.newIcon}`}
+            aria-hidden="true"
+          >
+            N
+          </span>
           <div>
             <strong className={styles.statValue}>{newCount}</strong>
             <span className={styles.statLabel}>Новые на странице</span>
@@ -56,7 +68,12 @@ function TicketDashboardPanel({
         </article>
 
         <article className={styles.statItem}>
-          <span className={`${styles.statIcon} ${styles.progressIcon}`}>P</span>
+          <span
+            className={`${styles.statIcon} ${styles.progressIcon}`}
+            aria-hidden="true"
+          >
+            P
+          </span>
           <div>
             <strong className={styles.statValue}>{inProgressCount}</strong>
             <span className={styles.statLabel}>В работе на странице</span>
@@ -64,7 +81,12 @@ function TicketDashboardPanel({
         </article>
 
         <article className={styles.statItem}>
-          <span className={`${styles.statIcon} ${styles.doneIcon}`}>D</span>
+          <span
+            className={`${styles.statIcon} ${styles.doneIcon}`}
+            aria-hidden="true"
+          >
+            D
+          </span>
           <div>
             <strong className={styles.statValue}>{doneCount}</strong>
             <span className={styles.statLabel}>Закрыты на странице</span>
@@ -77,10 +99,10 @@ function TicketDashboardPanel({
 
         <div className={styles.actionsGrid}>
           <button
-            className={styles.actionButton}
+            className={getActionClassName(isAllTicketsActive)}
             type="button"
             onClick={onResetFilter}
-            aria-pressed={false}
+            aria-pressed={isAllTicketsActive}
           >
             <strong>Все заявки</strong>
             <span>Показать все заявки</span>

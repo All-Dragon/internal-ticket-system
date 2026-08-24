@@ -114,6 +114,7 @@ function TicketTable({
     <section className={styles.panel} aria-label="Список заявок">
       <div className={styles.tableWrap}>
         <table className={styles.table}>
+          <caption className={styles.visuallyHidden}>Список заявок</caption>
           <colgroup>
             <col className={styles.idColumn} />
             <col className={styles.titleColumn} />
@@ -127,14 +128,14 @@ function TicketTable({
 
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Заголовок</th>
-              <th>Описание</th>
-              <th>Статус</th>
-              <th>Приоритет</th>
-              <th>Создано (UTC)</th>
-              <th>Обновлено (UTC)</th>
-              <th>Действия</th>
+              <th scope="col">ID</th>
+              <th scope="col">Заголовок</th>
+              <th scope="col">Описание</th>
+              <th scope="col">Статус</th>
+              <th scope="col">Приоритет</th>
+              <th scope="col">Создано (UTC)</th>
+              <th scope="col">Обновлено (UTC)</th>
+              <th scope="col">Действия</th>
             </tr>
           </thead>
 
@@ -147,11 +148,7 @@ function TicketTable({
               const canEdit = !isDone;
 
               return (
-                <tr
-                  key={ticket.id}
-                  className={styles.row}
-                  onClick={() => onView(ticket)}
-                >
+                <tr key={ticket.id} className={styles.row}>
                   <td className={styles.idCell}>#{ticket.id}</td>
 
                   <td className={styles.titleCell}>{ticket.title}</td>
@@ -172,7 +169,7 @@ function TicketTable({
                       className={getStatusClassName(ticket.status)}
                       value={ticket.status}
                       disabled={isDone || isUpdating}
-                      onClick={(event) => event.stopPropagation()}
+                      aria-label={`Статус заявки #${ticket.id}`}
                       onChange={(event) =>
                         onStatusChange(
                           ticket.id,
@@ -194,18 +191,24 @@ function TicketTable({
                     </span>
                   </td>
 
-                  <td>{formatDate(ticket.created_at)}</td>
-                  <td>{formatDate(ticket.updated_at)}</td>
+                  <td>
+                    <time dateTime={ticket.created_at}>
+                      {formatDate(ticket.created_at)}
+                    </time>
+                  </td>
+                  <td>
+                    <time dateTime={ticket.updated_at}>
+                      {formatDate(ticket.updated_at)}
+                    </time>
+                  </td>
 
                   <td>
                     <div className={styles.actions}>
                       <button
                         className={`${styles.actionButton} ${styles.viewButton}`}
                         type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onView(ticket);
-                        }}
+                        onClick={() => onView(ticket)}
+                        aria-label={`Посмотреть заявку #${ticket.id}`}
                         title="Посмотреть заявку"
                       >
                         Смотр.
@@ -215,10 +218,8 @@ function TicketTable({
                         className={`${styles.actionButton} ${styles.editButton}`}
                         type="button"
                         disabled={!canEdit}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onEdit(ticket);
-                        }}
+                        onClick={() => onEdit(ticket)}
+                        aria-label={`Редактировать заявку #${ticket.id}`}
                         title={
                           isDone
                             ? "Заявку в статусе Done нельзя редактировать"
@@ -233,10 +234,8 @@ function TicketTable({
                           className={`${styles.actionButton} ${styles.dangerButton}`}
                           type="button"
                           disabled={!canDelete || isDeleting}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onDelete(ticket);
-                          }}
+                          onClick={() => onDelete(ticket)}
+                          aria-label={`Удалить заявку #${ticket.id}`}
                           title={
                             isDone
                               ? "Заявку в статусе Done нельзя удалить"
@@ -262,11 +261,11 @@ function TicketTable({
       </div>
 
       <footer className={styles.footer}>
-        <span className={styles.summary}>
+        <span className={styles.summary} aria-live="polite" aria-atomic="true">
           Показано {firstItemNumber}-{lastItemNumber} из {total} заявок
         </span>
 
-        <div className={styles.pagination} aria-label="Пагинация">
+        <nav className={styles.pagination} aria-label="Пагинация">
           <button
             className={styles.pageButton}
             type="button"
@@ -286,6 +285,7 @@ function TicketTable({
               }
               type="button"
               onClick={() => onPageChange(page)}
+              aria-current={page === filters.page ? "page" : undefined}
             >
               {page}
             </button>
@@ -299,7 +299,7 @@ function TicketTable({
           >
             Далее
           </button>
-        </div>
+        </nav>
 
         <label className={styles.pageSize}>
           На странице:

@@ -1,4 +1,5 @@
 import styles from "../styles/TicketDeleteConfirmModal.module.css";
+import useModalAccessibility from "../hooks/useModalAccessibility";
 
 import type { Ticket } from "../types/ticket";
 
@@ -15,13 +16,24 @@ function TicketDeleteConfirmModal({
   onCancel,
   onConfirm,
 }: TicketDeleteConfirmModalProps) {
+  function handleModalClose(): void {
+    if (!loading) {
+      onCancel();
+    }
+  }
+
+  const dialogRef = useModalAccessibility(handleModalClose);
+
   return (
     <div className={styles.backdrop}>
       <section
+        ref={dialogRef}
         className={styles.modal}
-        role="dialog"
+        role="alertdialog"
         aria-modal="true"
         aria-labelledby="delete-ticket-title"
+        aria-describedby="delete-ticket-warning"
+        tabIndex={-1}
       >
         <header className={styles.header}>
           <div>
@@ -36,7 +48,7 @@ function TicketDeleteConfirmModal({
           <button
             className={styles.closeButton}
             type="button"
-            onClick={onCancel}
+            onClick={handleModalClose}
             disabled={loading}
             aria-label="Закрыть подтверждение удаления"
           >
@@ -45,7 +57,7 @@ function TicketDeleteConfirmModal({
         </header>
 
         <div className={styles.content}>
-          <p className={styles.text}>
+          <p className={styles.text} id="delete-ticket-warning">
             Это действие нельзя отменить. Заявка будет удалена из системы.
           </p>
         </div>
@@ -54,8 +66,9 @@ function TicketDeleteConfirmModal({
           <button
             className={styles.cancelButton}
             type="button"
-            onClick={onCancel}
+            onClick={handleModalClose}
             disabled={loading}
+            data-modal-initial-focus
           >
             Отмена
           </button>

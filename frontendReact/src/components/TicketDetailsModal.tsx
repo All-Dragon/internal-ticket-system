@@ -1,4 +1,5 @@
 import styles from "../styles/TicketDetailsModal.module.css";
+import useModalAccessibility from "../hooks/useModalAccessibility";
 
 import type { Ticket } from "../types/ticket";
 
@@ -74,14 +75,17 @@ function TicketDetailsModal({
 }: TicketDetailsModalProps) {
   const isDone = ticket.status === "done";
   const description = ticket.description || "Описание не указано";
+  const dialogRef = useModalAccessibility(onClose);
 
   return (
     <div className={styles.backdrop}>
       <section
+        ref={dialogRef}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
         aria-labelledby="ticket-details-title"
+        tabIndex={-1}
       >
         <header className={styles.header}>
           <div className={styles.heading}>
@@ -100,41 +104,42 @@ function TicketDetailsModal({
             type="button"
             onClick={onClose}
             aria-label="Закрыть подробности заявки"
+            data-modal-initial-focus
           >
             x
           </button>
         </header>
 
         <div className={styles.content}>
-          <section className={styles.summary}>
+          <dl className={styles.summary}>
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Статус</span>
-              <span className={getStatusClassName(ticket.status)}>
+              <dt className={styles.summaryLabel}>Статус</dt>
+              <dd className={getStatusClassName(ticket.status)}>
                 {statusLabels[ticket.status]}
-              </span>
+              </dd>
             </div>
 
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Приоритет</span>
-              <span className={getPriorityClassName(ticket.priority)}>
+              <dt className={styles.summaryLabel}>Приоритет</dt>
+              <dd className={getPriorityClassName(ticket.priority)}>
                 {priorityLabels[ticket.priority]}
-              </span>
+              </dd>
             </div>
 
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Создано (UTC)</span>
-              <span className={styles.summaryValue}>
+              <dt className={styles.summaryLabel}>Создано (UTC)</dt>
+              <dd className={styles.summaryValue}>
                 {formatDate(ticket.created_at)}
-              </span>
+              </dd>
             </div>
 
             <div className={styles.summaryItem}>
-              <span className={styles.summaryLabel}>Обновлено (UTC)</span>
-              <span className={styles.summaryValue}>
+              <dt className={styles.summaryLabel}>Обновлено (UTC)</dt>
+              <dd className={styles.summaryValue}>
                 {formatDate(ticket.updated_at)}
-              </span>
+              </dd>
             </div>
-          </section>
+          </dl>
 
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>Описание</h3>

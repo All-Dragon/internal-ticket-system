@@ -73,6 +73,7 @@
 .content {
   display: grid;
   gap: 12px;
+  margin: 0;
   padding: 20px 24px 22px;
   overflow: auto;
 }

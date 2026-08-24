@@ -1,4 +1,5 @@
 import styles from "../styles/TicketCreatedModal.module.css";
+import useModalAccessibility from "../hooks/useModalAccessibility";
 
 import type { Ticket } from "../types/ticket";
 
@@ -20,20 +21,25 @@ const priorityLabels: Record<Ticket["priority"], string> = {
 };
 
 function TicketCreatedModal({ ticket, onClose }: TicketCreatedModalProps) {
+  const dialogRef = useModalAccessibility(onClose);
+
   return (
     <div className={styles.backdrop}>
       <section
+        ref={dialogRef}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
         aria-labelledby="created-ticket-title"
+        aria-describedby="created-ticket-summary"
+        tabIndex={-1}
       >
         <header className={styles.header}>
           <div>
             <h2 className={styles.title} id="created-ticket-title">
               Заявка создана
             </h2>
-            <p className={styles.subtitle}>
+            <p className={styles.subtitle} id="created-ticket-summary">
               #{ticket.id} {ticket.title}
             </p>
           </div>
@@ -48,30 +54,31 @@ function TicketCreatedModal({ ticket, onClose }: TicketCreatedModalProps) {
           </button>
         </header>
 
-        <div className={styles.content}>
+        <dl className={styles.content}>
           <div className={styles.row}>
-            <span className={styles.label}>Статус</span>
-            <p className={styles.value}>{statusLabels[ticket.status]}</p>
+            <dt className={styles.label}>Статус</dt>
+            <dd className={styles.value}>{statusLabels[ticket.status]}</dd>
           </div>
 
           <div className={styles.row}>
-            <span className={styles.label}>Приоритет</span>
-            <p className={styles.value}>{priorityLabels[ticket.priority]}</p>
+            <dt className={styles.label}>Приоритет</dt>
+            <dd className={styles.value}>{priorityLabels[ticket.priority]}</dd>
           </div>
 
           <div className={styles.row}>
-            <span className={styles.label}>Описание</span>
-            <p className={styles.value}>
+            <dt className={styles.label}>Описание</dt>
+            <dd className={styles.value}>
               {ticket.description || "Не указано"}
-            </p>
+            </dd>
           </div>
-        </div>
+        </dl>
 
         <footer className={styles.actions}>
           <button
             className={styles.submitButton}
             type="button"
             onClick={onClose}
+            data-modal-initial-focus
           >
             Понятно
           </button>

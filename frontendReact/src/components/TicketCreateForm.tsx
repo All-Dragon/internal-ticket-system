@@ -26,10 +26,13 @@ function TicketCreateForm({ onCreated }: TicketCreateFormProps) {
         </h2>
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label className={styles.fieldGroup} htmlFor="ticket-title">
-            <span className={styles.label}>
-              Заголовок <span className={styles.required}>*</span>
-            </span>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="ticket-title">
+              Заголовок
+              <span className={styles.required} aria-hidden="true">
+                {" "}*
+              </span>
+            </label>
             <input
               className={styles.field}
               id="ticket-title"
@@ -38,12 +41,25 @@ function TicketCreateForm({ onCreated }: TicketCreateFormProps) {
               value={formData.title}
               onChange={handleChange}
               placeholder="Введите заголовок (от 3 до 120 символов)"
+              aria-required="true"
+              aria-invalid={Boolean(errors.title)}
+              aria-describedby={errors.title ? "ticket-title-error" : undefined}
             />
-            {errors.title && <p className={styles.errorText}>{errors.title}</p>}
-          </label>
+            {errors.title && (
+              <p
+                className={styles.errorText}
+                id="ticket-title-error"
+                role="alert"
+              >
+                {errors.title}
+              </p>
+            )}
+          </div>
 
-          <label className={styles.fieldGroup} htmlFor="ticket-description">
-            <span className={styles.label}>Описание</span>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="ticket-description">
+              Описание
+            </label>
             <textarea
               className={styles.textarea}
               id="ticket-description"
@@ -51,36 +67,69 @@ function TicketCreateForm({ onCreated }: TicketCreateFormProps) {
               value={formData.description}
               onChange={handleChange}
               placeholder="Введите описание (необязательно, до 1000 символов)"
+              aria-invalid={Boolean(errors.description)}
+              aria-describedby={
+                errors.description
+                  ? "ticket-description-counter ticket-description-error"
+                  : "ticket-description-counter"
+              }
             />
-            <span className={styles.textareaFooter}>
+            <span
+              className={styles.textareaFooter}
+              id="ticket-description-counter"
+            >
               {formData.description.length} / 1000
             </span>
             {errors.description && (
-              <p className={styles.errorText}>{errors.description}</p>
+              <p
+                className={styles.errorText}
+                id="ticket-description-error"
+                role="alert"
+              >
+                {errors.description}
+              </p>
             )}
-          </label>
+          </div>
 
-          <label className={styles.fieldGroup} htmlFor="ticket-priority">
-            <span className={styles.label}>
-              Приоритет <span className={styles.required}>*</span>
-            </span>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label} htmlFor="ticket-priority">
+              Приоритет
+              <span className={styles.required} aria-hidden="true">
+                {" "}*
+              </span>
+            </label>
             <select
               className={styles.select}
               id="ticket-priority"
               name="priority"
               value={formData.priority}
               onChange={handleChange}
+              aria-required="true"
+              aria-invalid={Boolean(errors.priority)}
+              aria-describedby={
+                errors.priority ? "ticket-priority-error" : undefined
+              }
             >
               <option value="low">Low</option>
               <option value="normal">Normal</option>
               <option value="high">High</option>
             </select>
             {errors.priority && (
-              <p className={styles.errorText}>{errors.priority}</p>
+              <p
+                className={styles.errorText}
+                id="ticket-priority-error"
+                role="alert"
+              >
+                {errors.priority}
+              </p>
             )}
-          </label>
+          </div>
 
-          {error && <p className={styles.errorText}>Ошибка: {error}</p>}
+          {error && (
+            <p className={styles.errorText} role="alert">
+              Ошибка: {error}
+            </p>
+          )}
 
           <div className={styles.actions}>
             <button
