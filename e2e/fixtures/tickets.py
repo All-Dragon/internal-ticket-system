@@ -53,6 +53,7 @@ def ticket_creator(
         title: str | None = None,
         description: str | None = None,
         priority: TicketPriority = TicketPriority.NORMAL,
+        status: TicketStatus = TicketStatus.NEW,
     ) -> CreatedTicket:
         ticket = ticket_data_factory(
             title=title,
@@ -72,6 +73,17 @@ def ticket_creator(
         assert response.status == 201
 
         response_data = response.json()
+
+        if status != TicketStatus.NEW:
+            status_response = page.request.patch(
+                f"/tickets/{response_data['id']}/status",
+                data={
+                    "status": status.value,
+                },
+            )
+
+            assert status_response.status == 200
+            response_data = status_response.json()
 
         return CreatedTicket(
             id=response_data["id"],

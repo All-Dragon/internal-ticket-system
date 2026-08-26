@@ -57,6 +57,16 @@ class TicketEditModal:
             exact=True,
         )
 
+    def title_error(self, ticket_id: int) -> Locator:
+        return self.dialog(ticket_id).locator(
+            "#edit-ticket-title-error"
+        )
+
+    def description_error(self, ticket_id: int) -> Locator:
+        return self.dialog(ticket_id).locator(
+            "#edit-ticket-description-error"
+        )
+
     @allure.step("Изменить данные заявки #{ticket_id}")
     def edit(
         self,
