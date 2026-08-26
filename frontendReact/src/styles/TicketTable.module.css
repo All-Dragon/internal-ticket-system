@@ -113,6 +113,14 @@
   font-weight: 700;
 }
 
+.titleText {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .descriptionCell {
   color: #526174;
 }

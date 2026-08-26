@@ -151,7 +151,14 @@ function TicketTable({
                 <tr key={ticket.id} className={styles.row}>
                   <td className={styles.idCell}>#{ticket.id}</td>
 
-                  <td className={styles.titleCell}>{ticket.title}</td>
+                  <td className={styles.titleCell}>
+                    <span
+                      className={styles.titleText}
+                      title={ticket.title}
+                    >
+                      {ticket.title}
+                    </span>
+                  </td>
 
                   <td className={styles.descriptionCell}>
                     <span
