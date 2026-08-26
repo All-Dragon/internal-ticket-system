@@ -3,7 +3,13 @@ from typing import Self
 import allure
 from playwright.sync_api import Page
 
-from e2e.components import AuthPanel, TicketCreateForm
+from e2e.components import (
+    AuthPanel,
+    TicketCreateForm,
+    TicketEditModal,
+    TicketTable,
+)
+
 
 class TicketPage:
     URL = "/"
@@ -19,6 +25,8 @@ class TicketPage:
 
         self.auth = AuthPanel(page)
         self.create_form = TicketCreateForm(page)
+        self.ticket_table = TicketTable(page)
+        self.edit_modal = TicketEditModal(page)
 
     @allure.step("Открыть главную страницу")
     def open(self) -> Self:

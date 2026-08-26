@@ -3,19 +3,21 @@ import pytest
 from playwright.sync_api import Page
 
 from e2e.config import e2e_config
-
-from e2e.pages.ticket_page import TicketPage
-
 from e2e.fixtures import (
     admin_credentials,
     admin_ticket_page,
+    ticket_creator,
     ticket_data_factory,
+    ticket_editor,
 )
+from e2e.pages.ticket_page import TicketPage
 
 __all__ = [
     "admin_credentials",
     "admin_ticket_page",
     "ticket_data_factory",
+    "ticket_creator",
+    "ticket_editor",
 ]
 
 
@@ -38,7 +40,6 @@ def browser_context_args(browser_context_args: dict) -> dict:
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-
     outcome = yield
     report = outcome.get_result()
 
@@ -71,8 +72,8 @@ def pytest_runtest_makereport(item, call):
         name="Page URL",
         attachment_type=allure.attachment_type.TEXT,
     )
-    
-    
+
+
 @pytest.fixture
 def ticket_page(page: Page) -> TicketPage:
     return TicketPage(page)
