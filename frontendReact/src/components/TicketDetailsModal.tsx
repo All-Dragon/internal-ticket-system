@@ -114,36 +114,59 @@ function TicketDetailsModal({
           <dl className={styles.summary}>
             <div className={styles.summaryItem}>
               <dt className={styles.summaryLabel}>Статус</dt>
-              <dd className={getStatusClassName(ticket.status)}>
+              <dd
+                className={getStatusClassName(ticket.status)}
+                data-testid="ticket-status"
+              >
                 {statusLabels[ticket.status]}
               </dd>
             </div>
 
             <div className={styles.summaryItem}>
               <dt className={styles.summaryLabel}>Приоритет</dt>
-              <dd className={getPriorityClassName(ticket.priority)}>
+              <dd
+                className={getPriorityClassName(ticket.priority)}
+                data-testid="ticket-priority"
+              >
                 {priorityLabels[ticket.priority]}
               </dd>
             </div>
 
             <div className={styles.summaryItem}>
               <dt className={styles.summaryLabel}>Создано (UTC)</dt>
-              <dd className={styles.summaryValue}>
+              <dd
+                className={styles.summaryValue}
+                data-testid="ticket-created-at"
+              >
                 {formatDate(ticket.created_at)}
               </dd>
             </div>
 
             <div className={styles.summaryItem}>
               <dt className={styles.summaryLabel}>Обновлено (UTC)</dt>
-              <dd className={styles.summaryValue}>
+              <dd
+                className={styles.summaryValue}
+                data-testid="ticket-updated-at"
+              >
                 {formatDate(ticket.updated_at)}
               </dd>
             </div>
           </dl>
 
-          <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Описание</h3>
-            <p className={styles.description}>{description}</p>
+          <section
+            className={styles.section}
+            aria-labelledby="ticket-description-title"
+          >
+            <h3
+              className={styles.sectionTitle}
+              id="ticket-description-title"
+            >
+              Описание
+            </h3>
+
+            <p className={styles.description}>
+              {description}
+            </p>
           </section>
 
           <section className={styles.section}>
