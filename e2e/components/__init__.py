@@ -3,6 +3,7 @@ from e2e.components.ticket_create_form import TicketCreateForm
 from e2e.components.ticket_table import TicketTable
 from e2e.components.ticket_edit_modal import TicketEditModal
 from e2e.components.ticket_details_modal import TicketDetailsModal
+from e2e.components.ticket_delete_confirm_modal import TicketDeleteConfirmModal
 
 __all__ = [
     "AuthPanel",
@@ -10,4 +11,5 @@ __all__ = [
     "TicketTable",
     "TicketEditModal",
     "TicketDetailsModal",
+    "TicketDeleteConfirmModal",
 ]

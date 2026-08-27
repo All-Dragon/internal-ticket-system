@@ -8,7 +8,8 @@ from e2e.components import (
     TicketCreateForm,
     TicketEditModal,
     TicketTable,
-    TicketDetailsModal
+    TicketDetailsModal,
+    TicketDeleteConfirmModal,
 )
 
 
@@ -29,6 +30,7 @@ class TicketPage:
         self.ticket_table = TicketTable(page)
         self.edit_modal = TicketEditModal(page)
         self.details_modal = TicketDetailsModal(page)
+        self.delete_modal = TicketDeleteConfirmModal(page)
 
     @allure.step("Открыть главную страницу")
     def open(self) -> Self:
