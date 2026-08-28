@@ -95,17 +95,25 @@ function TicketDashboardPanel({
       </div>
 
       <div className={styles.actionsBlock}>
-        <h3 className={styles.subtitle}>Быстрые фильтры</h3>
+        <h3 className={styles.subtitle} id="quick-filters-title">
+          Быстрые фильтры
+        </h3>
 
-        <div className={styles.actionsGrid}>
+        <div
+          className={styles.actionsGrid}
+          role="group"
+          aria-labelledby="quick-filters-title"
+        >
           <button
             className={getActionClassName(isAllTicketsActive)}
             type="button"
             onClick={onResetFilter}
             aria-pressed={isAllTicketsActive}
+            aria-labelledby="quick-filter-all-label"
+            aria-describedby="quick-filter-all-description"
           >
-            <strong>Все заявки</strong>
-            <span>Показать все заявки</span>
+            <strong id="quick-filter-all-label">Все заявки</strong>
+            <span id="quick-filter-all-description">Показать все заявки</span>
           </button>
 
           <button
@@ -113,9 +121,11 @@ function TicketDashboardPanel({
             type="button"
             onClick={() => onStatusFilter("new")}
             aria-pressed={activeQuickFilter === "new"}
+            aria-labelledby="quick-filter-new-label"
+            aria-describedby="quick-filter-new-description"
           >
-            <strong>Новые</strong>
-            <span>Только New</span>
+            <strong id="quick-filter-new-label">Новые</strong>
+            <span id="quick-filter-new-description">Только New</span>
           </button>
 
           <button
@@ -123,9 +133,11 @@ function TicketDashboardPanel({
             type="button"
             onClick={() => onStatusFilter("in_progress")}
             aria-pressed={activeQuickFilter === "in_progress"}
+            aria-labelledby="quick-filter-progress-label"
+            aria-describedby="quick-filter-progress-description"
           >
-            <strong>В работе</strong>
-            <span>Только In Progress</span>
+            <strong id="quick-filter-progress-label">В работе</strong>
+            <span id="quick-filter-progress-description">Только In Progress</span>
           </button>
 
           <button
@@ -133,9 +145,11 @@ function TicketDashboardPanel({
             type="button"
             onClick={() => onStatusFilter("done")}
             aria-pressed={activeQuickFilter === "done"}
+            aria-labelledby="quick-filter-done-label"
+            aria-describedby="quick-filter-done-description"
           >
-            <strong>Закрытые</strong>
-            <span>Только Done</span>
+            <strong id="quick-filter-done-label">Закрытые</strong>
+            <span id="quick-filter-done-description">Только Done</span>
           </button>
 
           <button
@@ -143,9 +157,11 @@ function TicketDashboardPanel({
             type="button"
             onClick={() => onPriorityFilter("high")}
             aria-pressed={activeQuickFilter === "priority_high"}
+            aria-labelledby="quick-filter-high-label"
+            aria-describedby="quick-filter-high-description"
           >
-            <strong>Высокий приоритет</strong>
-            <span>Только High</span>
+            <strong id="quick-filter-high-label">Высокий приоритет</strong>
+            <span id="quick-filter-high-description">Только High</span>
           </button>
         </div>
       </div>
