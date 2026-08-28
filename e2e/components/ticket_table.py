@@ -27,6 +27,8 @@ class TicketTable:
             exact=True,
         )
         
+        self.rows = self.table.locator("tbody").get_by_role("row")
+
         self.pagination = self.root.get_by_role(
             "navigation",
             name="Пагинация",

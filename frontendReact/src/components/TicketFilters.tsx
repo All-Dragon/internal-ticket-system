@@ -11,7 +11,7 @@ type TicketFiltersProps = {
 
 function TicketFilters({ filters, onChange, onReset }: TicketFiltersProps) {
   return (
-    <div className={styles.root}>
+    <section className={styles.root} aria-label="Фильтры заявок">
       <label className={styles.fieldGroup} htmlFor="ticket-search">
         <span className={styles.label}>Поиск</span>
         <span className={styles.searchWrap}>
@@ -94,7 +94,7 @@ function TicketFilters({ filters, onChange, onReset }: TicketFiltersProps) {
       <button className={styles.resetButton} type="button" onClick={onReset}>
         Сбросить фильтры
       </button>
-    </div>
+    </section>
   );
 }
 
