@@ -1,131 +1,103 @@
 # Internal Ticket System
 
-Проект выполнен как тестовое задание на стек:
+Веб-приложение для регистрации и обработки внутренних заявок. Изначально проект был выполнен как тестовое задание, а затем расширен полноценным QA-контуром: API- и E2E-автотестами, Allure-отчётностью, изолированным тестовым окружением в Docker и CI pipeline.
 
-- Backend: `Python`, `FastAPI`, `SQLAlchemy`, `Alembic`
-- Frontend: `React`, `TypeScript`, `Vite`
-- Database: `SQLite`
-- Auth: `JWT` для входа администратора
-- Infra: `Docker Compose`, `nginx`
+Проект демонстрирует не только разработку приложения, но и практику ручного и автоматизированного тестирования: анализ требований, техники тест-дизайна, проверку REST API и UI, работу с accessibility-локаторами, поиск дефектов и их документирование.
+
+## QA-возможности проекта
+
+- API-тесты на `pytest`, `pytest-asyncio` и `HTTPX`.
+- UI/E2E-тесты на `pytest-playwright` с Chromium.
+- Page Object + Component Object для переиспользуемых UI-действий.
+- Тестовые фабрики и фикстуры для подготовки независимых данных.
+- Позитивные, негативные и граничные проверки.
+- Проверки бизнес-правил, ролей и сохранения данных после перезагрузки.
+- Параметризованные тесты фильтрации, сортировки и валидации.
+- Allure features, stories, titles, severity и пошаговая детализация.
+- Скриншот и URL страницы в Allure при падении UI-теста.
+- Playwright trace и video при падении E2E в CI.
+- Изолированная SQLite-база для API-тестов.
+- Отдельный Docker Compose-проект и volume для E2E.
+- GitHub Actions с раздельными jobs для API, frontend и E2E.
+- QA-документация: тест-план, тест-кейсы, чек-лист и баг-репорты.
+
+## Стек
+
+### Приложение
+
+- Backend: `Python 3.12`, `FastAPI`, `SQLAlchemy`, `Alembic`.
+- Frontend: `React 19`, `TypeScript`, `Vite`.
+- Database: `SQLite`.
+- Auth: `JWT` для администратора.
+- Infra: `Docker Compose`, `nginx`.
+
+### Тестирование
+
+- `pytest`, `pytest-asyncio`, `pytest-mock`.
+- `HTTPX ASGITransport` для API-тестов без запуска внешнего сервера.
+- `Playwright for Python`, `pytest-playwright`.
+- `Allure Pytest`.
+- Accessibility-локаторы Playwright: role, label и accessible name.
+- GitHub Actions и Docker Compose.
+
+## QA-документация
+
+- [Тест-план](docs/qa/test-plan.md)
+- [Тест-кейсы](docs/qa/test-cases.md)
+- [Чек-лист](docs/qa/checklist.md)
+- [Баг-репорты](docs/qa/bug-reports.md)
+
+Документы отражают фактические функциональные сценарии и дефекты, обнаруженные во время разработки и тестирования проекта.
 
 ## Что реализовано
 
-- Создание заявки.
-- Просмотр списка заявок.
-- Фильтрация по `status` и `priority`.
-- Поиск по `title` и `description`.
-- Сортировка по дате создания и приоритету.
+- Создание и просмотр заявок.
+- Поиск по заголовку и описанию.
+- Фильтрация по статусу и приоритету.
+- Быстрые фильтры для типовых выборок.
+- Сортировка по дате создания, приоритету и статусу.
 - Изменение статуса заявки.
-- Редактирование заявки, если она не в статусе `done`.
-- Удаление заявки только администратором.
-- Пагинация списка.
-- Админский вход.
+- Редактирование заявки.
+- Удаление заявки администратором.
+- Пагинация и изменение размера страницы.
+- Вход и выход администратора.
 - Состояния загрузки, пустого списка и ошибок API.
-- Модальные окна для просмотра, редактирования, создания и подтверждения удаления.
-- Демо-данные для быстрого просмотра приложения.
+- Модальные окна просмотра, редактирования, создания и подтверждения удаления.
+- Демо-данные для быстрого знакомства с приложением.
 
-Фронт управляет параметрами поиска, фильтрации, сортировки и пагинации, а итоговая выборка выполняется на backend.
+Параметры поиска, фильтрации, сортировки и пагинации передаются с frontend на backend, а итоговая выборка формируется на сервере.
 
 ## Бизнес-правила
 
-- Администратор нужен только для удаления заявок.
-- Дефолтные креды администратора: `admin:admin`.
+- Администратор необходим для удаления заявок.
+- Демо-учётные данные администратора: `admin:admin`.
 - Заявку в статусе `done` нельзя редактировать.
 - Заявку в статусе `done` нельзя удалить.
 - Заявку нельзя перевести из `done` обратно в другой статус.
-- При нарушении бизнес-правил API возвращает осмысленный HTTP-статус и сообщение об ошибке.
+- При нарушении бизнес-правил API возвращает соответствующий HTTP-статус и сообщение об ошибке.
 
-## Требования
+## Быстрый запуск приложения
 
-- Python 3.12
-- Node.js 22+
-- Docker Desktop, если используется Docker-запуск
+Требования:
 
-## Переменные окружения
+- Docker Desktop;
+- свободный порт `80`.
 
-В проекте есть два example-файла:
-
-- `.env.example` - для локального запуска backend/frontend;
-- `.env.docker.example` - для запуска через Docker Compose.
-
-Для локального запуска можно создать рабочий `.env`:
-
-```bash
-copy .env.example .env
-```
-
-Для Docker можно запускать напрямую через example-файл:
+Из корня проекта выполните:
 
 ```bash
 docker compose --env-file .env.docker.example up --build
 ```
 
-Локальный пример:
-
-```env
-DATABASE_URL=sqlite+aiosqlite:///./app.db
-API_BASE_URL=http://localhost:8000
-VITE_API_BASE_URL=http://localhost:8000
-SECRET_KEY=your_super_secret_key_change_this_in_production
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin
-```
-
-Docker-пример:
-
-```env
-DATABASE_URL=sqlite+aiosqlite:////app/data/app.db
-API_BASE_URL=http://app:8000
-VITE_API_BASE_URL=
-SECRET_KEY=your_secret_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin
-SEED_DEMO_DATA=true
-```
-
-Рабочие `.env`-файлы не нужно коммитить.
-
-## Быстрый запуск через Docker
-
-Из корня проекта:
-
-```bash
-docker compose --env-file .env.docker.example up --build
-```
-
-Это основной сценарий запуска для проверки проекта. После выполнения команды приложение уже готово к работе: backend автоматически применяет миграции, создает SQLite-базу в Docker volume и при пустой таблице добавляет демо-заявки.
-
-После запуска приложение будет доступно:
+После запуска приложение доступно по адресу:
 
 ```text
 http://localhost
 ```
 
-Отдельно запускать миграции для Docker не нужно. Они выполняются автоматически перед стартом API:
+Backend автоматически применяет миграции, создаёт SQLite-базу в Docker volume и добавляет демо-заявки, если таблица пуста.
 
-```bash
-alembic upgrade head
-```
-
-После миграций автоматически запускается заполнение демо-данными:
-
-```bash
-python -m app.utils.mock_data
-```
-
-Демо-данные добавляются только если таблица заявок пустая. При повторном запуске контейнера дубли не создаются.
-
-Если нужно запустить без демо-данных, поменяйте в `.env.docker.example`:
-
-```env
-SEED_DEMO_DATA=false
-```
-
-Полезные Docker-команды:
+Полезные команды:
 
 ```bash
 docker compose ps
@@ -134,40 +106,203 @@ docker compose logs -f nginx
 docker compose down
 ```
 
-Полностью удалить SQLite volume и начать с чистой базы:
+Удалить приложение вместе с локальной Docker-базой:
 
 ```bash
 docker compose down -v
-docker compose --env-file .env.docker.example up --build
 ```
 
-Важно: при первой сборке Docker должен скачать образы `python`, `node` и `nginx` с Docker Hub. Если сборка падает на `failed to resolve source metadata`, проверьте интернет, DNS или proxy-настройки Docker Desktop.
+## Запуск API-тестов
 
-## Локальный запуск backend
-
-Создать и активировать виртуальное окружение:
+Установите Python-зависимости:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+python -m pip install -r requirements.txt
 ```
 
-Установить зависимости:
+Запустите API-тесты:
 
 ```bash
-pip install -r requirements.txt
+pytest tests -v
 ```
 
-Создать локальный env-файл:
+Обычная команда `pytest` также запускает только каталог `tests`, поскольку он указан в `pytest.ini` как основной `testpaths`.
+
+API-тесты не обращаются к запущенному серверу. `HTTPX` отправляет запросы непосредственно в FastAPI-приложение через `ASGITransport`. Для тестовой сессии создаётся отдельная SQLite-база в памяти, а изменения каждого теста откатываются транзакцией.
+
+Покрываются:
+
+- health check;
+- успешная и неуспешная авторизация;
+- получение списка и отдельной заявки;
+- поиск без учёта регистра, включая кириллицу;
+- создание и валидация заявки;
+- изменение данных и статуса;
+- запреты для заявки в статусе `done`;
+- удаление с токеном администратора и без него;
+- HTTP-статусы, схемы ответов и ключевые сообщения логов.
+
+## Запуск E2E-тестов
+
+E2E выполняются в настоящем браузере против полностью запущенного приложения. Чтобы тестовые заявки не попадали в локальную рабочую базу, используется отдельный Compose project с отдельным Docker volume.
+
+### 1. Поднять E2E-окружение
 
 ```bash
-copy .env.example .env
+docker compose -p internal-ticket-system-e2e --env-file e2e/.env.e2e.example up -d --build
 ```
 
-Применить миграции:
+Приложение будет доступно по адресу:
+
+```text
+http://localhost:8080
+```
+
+### 2. Установить Chromium для Playwright
+
+```bash
+python -m playwright install chromium
+```
+
+### 3. Запустить тесты
+
+```bash
+pytest e2e -v --browser=chromium --base-url=http://localhost:8080
+```
+
+Запуск только smoke-набора:
+
+```bash
+pytest e2e -v -m smoke --browser=chromium --base-url=http://localhost:8080
+```
+
+Запуск regression-набора:
+
+```bash
+pytest e2e -v -m regression --browser=chromium --base-url=http://localhost:8080
+```
+
+Запуск с видимым браузером:
+
+```bash
+pytest e2e -v --headed --browser=chromium --base-url=http://localhost:8080
+```
+
+### 4. Остановить окружение и удалить тестовую базу
+
+```bash
+docker compose -p internal-ticket-system-e2e --env-file e2e/.env.e2e.example down -v
+```
+
+E2E покрывают:
+
+- позитивную и негативную авторизацию;
+- создание заявки и клиентскую валидацию;
+- граничные значения заголовка и описания;
+- отображение заявки в таблице;
+- изменение статуса;
+- редактирование одного и нескольких полей;
+- сохранение изменений после перезагрузки;
+- просмотр актуальных данных в модальном окне;
+- разрешённые и запрещённые сценарии удаления;
+- поиск и состояние пустой выдачи;
+- обычные и быстрые фильтры;
+- совместное применение фильтров и их сброс;
+- сортировку по дате, приоритету и статусу;
+- навигацию по страницам и изменение размера страницы.
+
+## Allure Report
+
+Сформировать результаты:
+
+```bash
+pytest e2e -v --browser=chromium --base-url=http://localhost:8080 --alluredir=allure-results --clean-alluredir
+```
+
+Открыть интерактивный отчёт:
+
+```bash
+allure serve allure-results
+```
+
+Для второй команды должен быть отдельно установлен Allure Commandline. В отчёте тесты сгруппированы по feature и story, содержат severity и шаги. При падении теста автоматически прикладываются полноэкранный скриншот и URL страницы.
+
+Для дополнительной диагностики можно сохранить trace и video:
+
+```bash
+pytest e2e -v --browser=chromium --base-url=http://localhost:8080 --tracing=retain-on-failure --video=retain-on-failure --alluredir=allure-results --clean-alluredir
+```
+
+## Frontend-проверки
+
+```bash
+cd frontendReact
+npm ci
+npm run typecheck
+npm run lint
+npm run build
+```
+
+## CI pipeline
+
+Workflow `.github/workflows/ci.yml` запускается для pull request и push в ветки `main` и `refactor`.
+
+Pipeline состоит из трёх jobs:
+
+1. `api-tests` — устанавливает Python-зависимости и запускает API-тесты.
+2. `frontend` — выполняет TypeScript typecheck, ESLint и production build.
+3. `e2e-tests` — после успешных API и frontend jobs поднимает отдельное Docker-окружение, ожидает `/health`, запускает Chromium E2E и останавливает окружение.
+
+E2E job выполняется со следующими диагностическими настройками:
+
+- Allure results;
+- Playwright trace при падении;
+- video при падении;
+- скриншот и URL из pytest hook;
+- Docker logs при неуспешном job;
+- публикация `allure-results` и `test-results` как CI-артефакта на 14 дней;
+- гарантированное удаление E2E-контейнеров и volume после выполнения.
+
+## Архитектура автотестов
+
+```text
+tests/
+  conftest.py             изолированная БД и HTTPX-клиент
+  test_auth.py            API авторизации
+  test_health.py          health check
+  test_ticket.py          API заявок и бизнес-правила
+
+e2e/
+  components/             UI-компоненты и модальные окна
+  fixtures/               авторизация, фабрики и подготовка заявок
+  models/                 enum и тестовые модели
+  pages/                  Page Object главной страницы
+  tests/                  пользовательские E2E-сценарии
+  config.py               настройки E2E из environment
+  conftest.py             browser context, fixtures и failure attachments
+
+docs/qa/
+  test-plan.md            стратегия и объём тестирования
+  test-cases.md           подробные ручные сценарии
+  checklist.md            чек-лист регрессионной проверки
+  bug-reports.md          найденные дефекты и результаты ретеста
+```
+
+Локаторы строятся преимущественно через семантические границы, роли, label и accessible name. Компоненты инкапсулируют действия с конкретными областями UI, а тесты сохраняют фокус на пользовательских сценариях и проверках результата.
+
+API используется в E2E-фикстурах только для быстрой подготовки предусловий. Ключевые пользовательские сценарии, например создание заявки и её появление в таблице, проходят полностью через UI.
+
+## Локальный запуск для разработки
+
+### Backend
+
+Требования: Python 3.12.
+
+Создайте виртуальное окружение, установите зависимости и создайте `.env` на основе `.env.example`. Затем выполните:
 
 ```bash
 alembic upgrade head
+uvicorn app.api.main:app --reload
 ```
 
 При необходимости добавить демо-данные:
@@ -176,13 +311,7 @@ alembic upgrade head
 python -m app.utils.mock_data
 ```
 
-Запустить backend:
-
-```bash
-uvicorn app.api.main:app --reload
-```
-
-Backend будет доступен:
+Backend будет доступен по адресам:
 
 ```text
 http://localhost:8000
@@ -190,9 +319,9 @@ http://localhost:8000/docs
 http://localhost:8000/health
 ```
 
-## Локальный запуск frontend
+### Frontend
 
-В отдельном терминале:
+Требование: Node.js 22+.
 
 ```bash
 cd frontendReact
@@ -200,7 +329,7 @@ npm install
 npm run dev
 ```
 
-Frontend будет доступен:
+Frontend будет доступен по адресу:
 
 ```text
 http://localhost:5173
@@ -208,9 +337,33 @@ http://localhost:5173
 
 В dev-режиме Vite проксирует `/auth` и `/tickets` на backend `http://127.0.0.1:8000`.
 
-## API endpoints
+## Переменные окружения
 
-Основные endpoints:
+- `.env.example` — локальный запуск backend и frontend.
+- `.env.docker.example` — обычный Docker-запуск с демо-данными.
+- `e2e/.env.e2e.example` — изолированный Docker-запуск E2E на порту `8080` без демо-данных.
+
+Рабочие `.env`-файлы, секреты, базы данных, логи и тестовые артефакты исключены из Git.
+
+Основные переменные:
+
+```text
+DATABASE_URL
+API_BASE_URL
+VITE_API_BASE_URL
+SECRET_KEY
+ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES
+ADMIN_USERNAME
+ADMIN_PASSWORD
+SEED_DEMO_DATA
+E2E_BASE_URL
+APP_PORT
+```
+
+Приоритет конфигурации E2E: переменная окружения, значение из корневого `.env`, значение по умолчанию.
+
+## API endpoints
 
 ```text
 GET    /health
@@ -222,8 +375,6 @@ PATCH  /tickets/{id}
 PATCH  /tickets/{id}/status
 DELETE /tickets/{id}
 ```
-
-`DELETE /tickets/{id}` требует авторизации администратора.
 
 Параметры списка заявок:
 
@@ -237,80 +388,15 @@ page: number
 page_size: number
 ```
 
-Swagger UI доступен по адресу:
+Swagger UI доступен по адресу `http://localhost:8000/docs`.
 
-```text
-http://localhost:8000/docs
-```
-
-## Тесты и проверки
-
-Backend:
-
-```bash
-pytest
-```
-
-Frontend typecheck:
-
-```bash
-cd frontendReact
-npm run typecheck
-```
-
-Frontend lint:
-
-```bash
-cd frontendReact
-npm run lint
-```
-
-Frontend production build:
-
-```bash
-cd frontendReact
-npm run build
-```
-
-## Миграции
-
-Применить миграции:
-
-```bash
-alembic upgrade head
-```
-
-Создать новую миграцию:
-
-```bash
-alembic revision --autogenerate -m "migration_name"
-```
-
-Текущая SQLite-база при локальном запуске создается как `app.db` в корне проекта. В Docker база хранится в volume `sqlite_data`.
-
-## Логи
-
-Логи пишутся в консоль и в файл:
-
-```text
-logs/app.log
-```
-
-В Docker логи удобнее смотреть так:
-
-```bash
-docker compose logs -f app
-```
-
-Файлы логов не коммитятся.
-
-## Структура проекта
+## Структура приложения
 
 ```text
 app/
   api/              FastAPI routes
-  core/             config, JWT, logging
-  db/               database, models, enums, SQLite helpers
+  core/             config, JWT и logging
+  db/               database, models, enums и SQLite helpers
   repositories/     database queries
   schemas/          Pydantic schemas
   services/         business logic
@@ -320,23 +406,42 @@ frontendReact/
   src/
     api/            запросы к backend
     components/     UI-компоненты
-    hooks/          frontend logic и работа с состоянием
+    hooks/          frontend logic и состояние
     pages/          страницы приложения
     styles/         CSS modules
     types/          TypeScript-типы
-    utils/          frontend helpers и validation
-nginx/              nginx config and frontend image
-tests/              backend tests
+    utils/          frontend validation и helpers
+nginx/              nginx config и frontend image
 ```
 
-Backend использует слойность:
+Backend:
 
 ```text
 router -> service -> repository -> database
 ```
 
-Frontend разделен на:
+Frontend:
 
 ```text
 page -> component -> hook -> api
+```
+
+## Логи и миграции
+
+Применить миграции:
+
+```bash
+alembic upgrade head
+```
+
+Создать миграцию:
+
+```bash
+alembic revision --autogenerate -m "migration_name"
+```
+
+Логи приложения пишутся в консоль и в `logs/app.log`. В Docker их можно просмотреть командой:
+
+```bash
+docker compose logs -f app
 ```
